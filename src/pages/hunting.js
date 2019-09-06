@@ -94,7 +94,7 @@ class HuntingPage extends React.PureComponent {
 
         return(
             <ContainerPage>
-                <HeaderDetails onGoBack={() => navigation.goBack()} title={title || 'Охотничьи ресурсы'} />
+                <HeaderDetails searchIcon onGoBack={() => navigation.goBack()} title={title || 'Охотничьи ресурсы'} />
 
                 <StatusBar backgroundColor="#36404a" barStyle="light-content" />
                 <ImageBackground source={require('../img/login-bg.jpg')} style={{width: w, flex: 1}}>

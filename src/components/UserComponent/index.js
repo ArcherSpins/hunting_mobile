@@ -91,7 +91,7 @@ export class UserComponent extends React.PureComponent {
                     textStyle={{width: '100%'}}
                   item={{
                       subtitle: 'Местоположение',
-                      name: permission ? 'Разрешено' : 'Запрещено',
+                      name: permission ? 'Разрешено охотиться' : 'Запрещено охотиться',
                   }}
                   last
                />

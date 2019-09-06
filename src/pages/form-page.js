@@ -38,7 +38,7 @@ class FormPage extends PureComponent {
             const result = await this._getAsyncData('user');
             if (result) {
                 authUserAction(JSON.parse(result));
-//                navigation.navigate('HOME');
+                navigation.navigate('HOME');
             }
 
             this.validation();

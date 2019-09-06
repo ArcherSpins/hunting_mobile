@@ -47,7 +47,7 @@ class DetailMap extends React.Component {
                             <ItemDetailsForHungry item={{title: hunting_farm_area, subtitle: 'Площадь'}} />
 
                             
-                            <ItemDetailsForHungry path={'/api/v1/HuntingFarm'} navigation={navigation} item={{title: 'Карта', path: 'MAP', last: true, id: item.hunting_farm_id}} />
+                            <ItemDetailsForHungry arrow path={'/api/v1/HuntingFarm'} navigation={navigation} item={{title: 'Карта', path: 'MAP', last: true, id: item.hunting_farm_id}} />
                             {/* {
                                 data.map((item, i) => (
                                     <ItemDetailsForHungry size={hunting_farm_area} navigation={navigation} key={item.id || i} item={item} />

@@ -14,7 +14,7 @@ const Title = styled.Text`
 
 export const NotFoundText = ({ message }) => (
     <Container>
-        <Title>{message || 'Not Found'}</Title>
+        <Title>{message || 'Не найдено'}</Title>
     </Container>
 );
 
