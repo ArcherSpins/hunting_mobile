@@ -1,6 +1,8 @@
 import React, { PureComponent } from 'react';
 import { Container, Header, Content, Form, Item, Input, Button, Icon, Text } from 'native-base';
 import { View, AsyncStorage, StatusBar } from 'react-native';
+import axios from 'axios';
+import RNFetchBlob from 'rn-fetch-blob';
 import NetInfo from '@react-native-community/netinfo';
 import { connect } from 'react-redux';
 import { Loading } from '../components';
@@ -38,7 +40,7 @@ class FormPage extends PureComponent {
             const result = await this._getAsyncData('user');
             if (result) {
                 authUserAction(JSON.parse(result));
-                navigation.navigate('HOME');
+                // navigation.navigate('HOME');
             }
 
             this.validation();
@@ -134,21 +136,66 @@ class FormPage extends PureComponent {
     submitFormAuth = () => {
         const { seria, nomer } = this.state;
         const { navigation, authUserAction } = this.props;
-        NetInfo.isConnected.fetch().then(async isConnected => {
+
+        console.log(seria, nomer)
+        NetInfo.isConnected.fetch().then(isConnected => {
             if (isConnected) {
-                fetch(`http://172.16.17.11:8080/api/v1/Customer/${seria.value}/${nomer.value}`, {
-                    headers: {
-                        Authorization: 'uptec4nGePz9QDqqAz0bEmV3B15NEnUq'
-                    }
-                })
-                    .then(response => response.json())
-                    .then(async data => {
-                        authUserAction({nomer, seria, ...data});
-                        navigation.navigate('HOME');
-                        await this._storeData('user', JSON.stringify(data));
-                        return data;
+                // axios.defaults.httpsAgent = new https.Agent({ rejectUnauthorized: false })
+                // axios.defaults.headers.common['Authorization'] = 'uptec4nGePz9QDqqAz0bEmV3B15NEnUq';
+                // axios.get(`${url}/api/v1/Customer/${seria.value}/${nomer.value}`)
+                //   .then(async (data) => {
+                //       console.log(data)
+                //     authUserAction({nomer, seria, ...data});
+                //     await this._storeData('user', JSON.stringify(data));
+                //     // navigation.navigate('HOME');
+                //     return data;
+                //   })
+                //   .catch((error) => {
+                //     console.log(JSON.stringify(error));
+                //   })
+                //     .catch(err => alert(Object.keys(err).join(' ')));
+                try {
+                    RNFetchBlob.config({
+                        trusty : true
+                      })
+                      fetch(`${url}/api/v1/Customer/${seria.value}/${nomer.value}`, {
+                        headers: {
+                            Authorization: 'uptec4nGePz9QDqqAz0bEmV3B15NEnUq'
+                        }
                     })
-                    .catch(err => alert(Object.keys(err).join(' ')));
+                        .then(response => response.json())
+                        .then(async data => {
+                            console.log(data, `${url}/api/v1/Customer/${seria.value}/${nomer.value}`)
+                            authUserAction({nomer, seria, ...data});
+                            await this._storeData('user', JSON.stringify(data));
+                            navigation.navigate('HOME');
+                            return data;
+                        })
+                        .catch(err => console.log(`${url}/api/v1/Customer/${seria.value}/${nomer.value}`, err));
+                } catch(err) {
+                    console.log(err)
+                }
+                // try {
+                //     var request = new XMLHttpRequest();
+                //     request.onreadystatechange = (e) => {
+                //         if (request.readyState !== 4) {
+                //             return;
+                //         }
+
+                //         if (request.status === 200) {
+                //             console.log(request);
+                //         } else {
+                //             console.log(request.status + ' - ' + request.responseText);
+                //         }
+                //     };
+
+                //     request.setRequestHeader('Authorization', 'uptec4nGePz9QDqqAz0bEmV3B15NEnUq');
+
+                //     request.open('GET', `${url}/api/v1/Customer/${seria.value}/${nomer.value}`);
+                //     request.send();
+                // } catch (error) {
+                //     console.log(error)
+                // }
             } else {
                 alert('нет подключения к интернету');
             }
@@ -160,7 +207,6 @@ class FormPage extends PureComponent {
         const { seria, nomer } = this.state;
         const { formLoading } = this.props;
 
-
         if (formLoading)
             return <Loading />;
 
@@ -169,6 +215,7 @@ class FormPage extends PureComponent {
                 <Header style={{backgroundColor: '#36404a'}} />
 
                 <StatusBar backgroundColor="#36404a" barStyle="light-content" />
+                {/* <CreatePermission /> */}
                 <Content style={{flex: 1, paddingTop: 80}}>
                     <Text style={{marginBottom: 20, textAlign: 'center', fontSize: 20}}>Авторизация</Text>
                     <Form style={{justifyContent: 'center', flex: 1}}>

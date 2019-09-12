@@ -60,3 +60,17 @@ export const FoneBlock = styled.View`
     bottom: 0;
     background-color: rgba(0,0,0, 0.3);
 `;
+
+export const AddedButton = styled.TouchableOpacity`
+    padding: 5px;
+    background-color: #36404a;
+    width: 40px;
+    height: 40px;
+    border-radius: 20px;
+    position: absolute;
+    justify-content: center;
+    align-items: center;
+    bottom: 20px;
+    z-index: 1000;
+    right: 10px;
+`;

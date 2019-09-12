@@ -1,5 +1,5 @@
 import React from 'react';
-import { ImageBackground, Dimensions, StatusBar, PermissionsAndroid, View, AsyncStorage } from 'react-native';
+import { ImageBackground, Dimensions, StatusBar, PermissionsAndroid, View, AsyncStorage, Text } from 'react-native';
 import NetInfo from '@react-native-community/netinfo';
 import Geolocation from 'react-native-geolocation-service';
 import {
@@ -10,10 +10,11 @@ import {
     ItemDetailsForInfo,
     UserComponent,
     NotFoundText,
-    Loading
+    Loading,
+    CreatePermission
 } from '../components';
 import { connect } from 'react-redux';
-import { ContainerPage, Content } from './styled';
+import { ContainerPage, Content, AddedButton } from './styled';
 import { getLocationUser, setLocationUser } from '../redux/actions';
 
 const w = Dimensions.get('window').width;
@@ -25,7 +26,8 @@ class DetailsPage extends React.Component {
         this.state = {
             ready: false,
             where: {lat: null, lng: null},
-            error: null
+            error: null,
+            createPermission: false,
         }
     }
 
@@ -113,9 +115,17 @@ class DetailsPage extends React.Component {
         console.log(err.message);
     }
 
+    openCreateForm = () => {
+        this.setState({ createPermission: true });
+    }
+
+    closeCreateForm = () => {
+        this.setState({ createPermission: false });
+    }
+
 
     render() {
-        const { navigation, locationLoading, location } = this.props;
+        const { navigation, locationLoading, location, permission } = this.props;
         const { title, info, data, user, headerTitle } = navigation.state.params;
 
         if (locationLoading)
@@ -125,7 +135,19 @@ class DetailsPage extends React.Component {
             <ContainerPage>
                 <HeaderDetails onGoBack={() => navigation.goBack()} title={headerTitle || title} />
                 <StatusBar backgroundColor="#36404a" barStyle="light-content" />
+                {
+                    this.state.createPermission && permission && (
+                        <CreatePermission closeModal={this.closeCreateForm} />
+                    )
+                }
                 <ImageBackground source={require('../img/login-bg.jpg')} style={{width: w, flex: 1}}>
+                        {
+                            permission && (
+                                <AddedButton onPress={this.openCreateForm}>
+                                    <Text style={{fontSize: 24, color: "#fff"}}>+</Text>
+                                </AddedButton>
+                            )
+                        }
                     <Content>
                         <View style={{paddingBottom: 40}}>
                             {

@@ -18,3 +18,4 @@ export * from './ItemTable';
 export * from './UserComponent';
 export * from './NotFound';
 export * from './LoadingUploading';
+export * from './Forms/FormCreatePermissions';

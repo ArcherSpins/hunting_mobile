@@ -1,5 +1,6 @@
 import React from 'react';
 import { View, ScrollView, Dimensions, ImageBackground, AsyncStorage, StatusBar } from 'react-native';
+import axios from 'axios';
 import NetInfo from '@react-native-community/netinfo';
 import { connect } from 'react-redux';
 import { Header, CardData, TableList } from '../components';
@@ -69,22 +70,35 @@ class MainPage extends React.PureComponent {
 
     fetchPermissions = async () => {
         const { getPermissionAction, user, connected } = this.props;
+        console.log('fetch')
         if (connected) {
-            fetch(`${url}/api/v1/HuntingFarm/License/${user.data_customer_hunting_lic_id}`, {
-                method: 'GET',
-                headers: {
-                    'Content-Type': 'application/json'
-                }
-            })
-                .then(response => response.json())
-                .then(async (data) => {
-                    getPermissionAction(data);
-                    // FsService.writeJsonFile(`permissions.json`, data)
-                    await this._setAsyncData('license_hunting', JSON.stringify(data));
+            // axios.get(`${url}/api/v1/HuntingFarm/License/${user.data_customer_hunting_lic_id}`)
+            //     .then(async response => {
+            //         getPermissionAction(data);
+            //         await this._setAsyncData('license_hunting', JSON.stringify(data));
+            //     })
+            //     .catch(error => {
+            //         console.log(error);
+            //     })
+            if (user.data_customer_hunting_lic_id) {
+                fetch(`${url}/api/v1/HuntingFarm/License/${user.data_customer_hunting_lic_id}`, {
+                    headers: {
+                        'Content-Type': 'application/json'
+                    }
                 })
-                .catch(error => {
-                    console.log(error);
-                });
+                    .then(response => response.json())
+                    .then(async (data) => {
+                        getPermissionAction(data);
+                        // FsService.writeJsonFile(`permissions.json`, data)
+                        await this._setAsyncData('license_hunting', JSON.stringify(data));
+                    })
+                    .catch(error => {
+                        console.log(error);
+                    });
+            } else {
+                getPermissionAction([]);
+            }
+            
         } else {
             alert('Нет подключения к интернету');
         }
@@ -93,20 +107,24 @@ class MainPage extends React.PureComponent {
     fetchViolations = async () => {
         const { getViolationsAction, user, connected } = this.props;
         if (connected) {
-            fetch(`${url}/api/v1/Customer/${user.data_customer_id}/Violations`, {
-                method: 'GET',
-                headers: {
-                    'Content-Type': 'application/json'
-                }
-            })
-                .then(response => response.json())
-                .then(async (data) => {
-                    getViolationsAction(data);
-                    await this._setAsyncData('violations_customer', JSON.stringify(data));
+            if (user.data_customer_id) {
+                fetch(`${url}/api/v1/Customer/${user.data_customer_id}/Violations`, {
+                    headers: {
+                        'Content-Type': 'application/json'
+                    }
                 })
-                .catch(error => {
-                    console.log(error);
-                });
+                    .then(response => response.json())
+                    .then(async (data) => {
+                        getViolationsAction(data);
+                        await this._setAsyncData('violations_customer', JSON.stringify(data));
+                    })
+                    .catch(error => {
+                        console.log('main', error);
+                    });
+            } else {
+                getViolationsAction([]);
+            }
+            
         } else {
             alert('Нет подключения к интернету');
         }
@@ -166,6 +184,7 @@ class MainPage extends React.PureComponent {
                                     title="Разрешение на охоту"
                                     meta={permission.length > 0 ? `найдено: ${permission.length}` : 'не найдены'}
                                     url="DETAILS"
+                                    permission={true}
                                     navigation={navigation}
                                     data={permission}
                                     info={true}

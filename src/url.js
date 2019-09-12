@@ -1,1 +1,1 @@
-export const url = 'http://172.16.17.11:8080';
+export const url = 'https://ais-mprdag.ru:9443';
