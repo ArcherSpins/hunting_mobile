@@ -72,14 +72,6 @@ class MainPage extends React.PureComponent {
         const { getPermissionAction, user, connected } = this.props;
         console.log('fetch')
         if (connected) {
-            // axios.get(`${url}/api/v1/HuntingFarm/License/${user.data_customer_hunting_lic_id}`)
-            //     .then(async response => {
-            //         getPermissionAction(data);
-            //         await this._setAsyncData('license_hunting', JSON.stringify(data));
-            //     })
-            //     .catch(error => {
-            //         console.log(error);
-            //     })
             if (user.data_customer_hunting_lic_id) {
                 fetch(`${url}/api/v1/HuntingFarm/License/${user.data_customer_hunting_lic_id}`, {
                     headers: {
@@ -88,6 +80,7 @@ class MainPage extends React.PureComponent {
                 })
                     .then(response => response.json())
                     .then(async (data) => {
+                        console.log(data, user.data_customer_hunting_lic_id)
                         getPermissionAction(data);
                         // FsService.writeJsonFile(`permissions.json`, data)
                         await this._setAsyncData('license_hunting', JSON.stringify(data));

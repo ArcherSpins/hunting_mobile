@@ -4,14 +4,12 @@
         <trust-anchors>
             <certificates src="user"/>
             <certificates src="system"/>
-            <certificates src="@raw/my_ca"/>
             <certificates src="@raw/mprdag2"/>
         </trust-anchors>
     </base-config>
     <domain-config cleartextTrafficPermitted="true">
         <domain includeSubdomains="true">ais-mprdag.ru</domain>
         <trust-anchors>
-            <certificates src="@raw/my_ca"/>
             <certificates src="@raw/mprdag2"/>
         </trust-anchors>
     </domain-config>

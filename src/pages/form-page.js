@@ -2,7 +2,6 @@ import React, { PureComponent } from 'react';
 import { Container, Header, Content, Form, Item, Input, Button, Icon, Text } from 'native-base';
 import { View, AsyncStorage, StatusBar } from 'react-native';
 import axios from 'axios';
-import RNFetchBlob from 'rn-fetch-blob';
 import NetInfo from '@react-native-community/netinfo';
 import { connect } from 'react-redux';
 import { Loading } from '../components';
@@ -40,7 +39,7 @@ class FormPage extends PureComponent {
             const result = await this._getAsyncData('user');
             if (result) {
                 authUserAction(JSON.parse(result));
-                // navigation.navigate('HOME');
+                navigation.navigate('HOME');
             }
 
             this.validation();
@@ -140,25 +139,8 @@ class FormPage extends PureComponent {
         console.log(seria, nomer)
         NetInfo.isConnected.fetch().then(isConnected => {
             if (isConnected) {
-                // axios.defaults.httpsAgent = new https.Agent({ rejectUnauthorized: false })
-                // axios.defaults.headers.common['Authorization'] = 'uptec4nGePz9QDqqAz0bEmV3B15NEnUq';
-                // axios.get(`${url}/api/v1/Customer/${seria.value}/${nomer.value}`)
-                //   .then(async (data) => {
-                //       console.log(data)
-                //     authUserAction({nomer, seria, ...data});
-                //     await this._storeData('user', JSON.stringify(data));
-                //     // navigation.navigate('HOME');
-                //     return data;
-                //   })
-                //   .catch((error) => {
-                //     console.log(JSON.stringify(error));
-                //   })
-                //     .catch(err => alert(Object.keys(err).join(' ')));
                 try {
-                    RNFetchBlob.config({
-                        trusty : true
-                      })
-                      fetch(`${url}/api/v1/Customer/${seria.value}/${nomer.value}`, {
+                    fetch(`${url}/api/v1/Customer/${seria.value}/${nomer.value}`, {
                         headers: {
                             Authorization: 'uptec4nGePz9QDqqAz0bEmV3B15NEnUq'
                         }

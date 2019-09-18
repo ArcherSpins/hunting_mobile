@@ -11,11 +11,14 @@ import {
     UserComponent,
     NotFoundText,
     Loading,
-    CreatePermission
+    CreatePermission,
+    AlertMessage
 } from '../components';
 import { connect } from 'react-redux';
 import { ContainerPage, Content, AddedButton } from './styled';
-import { getLocationUser, setLocationUser } from '../redux/actions';
+import { getLocationUser, setLocationUser, getPermissionAction, fetchPermission } from '../redux/actions';
+
+import { url } from '../url';
 
 const w = Dimensions.get('window').width;
 
@@ -27,6 +30,8 @@ class DetailsPage extends React.Component {
             ready: false,
             where: {lat: null, lng: null},
             error: null,
+            
+            alertMessage: false,
             createPermission: false,
         }
     }
@@ -34,7 +39,9 @@ class DetailsPage extends React.Component {
      async componentDidMount() {
         const { getLocationUser, navigation } = this.props;
         const { user } = navigation.state.params;
+
         if (user) {
+            this.fetchPermissions();
             NetInfo.isConnected.fetch().then(async isConnected => {
                 setConnect(isConnected);
                 if (isConnected) {
@@ -75,9 +82,50 @@ class DetailsPage extends React.Component {
         }
     }
 
+    fetchPermissions = async () => {
+        const { getPermissionAction, user, connected, fetchPermission } = this.props;
+        if (connected) {
+            fetchPermission();
+            if (user.data_customer_hunting_lic_id) {
+                fetch(`${url}/api/v1/HuntingFarm/License/${user.data_customer_hunting_lic_id}`, {
+                    headers: {
+                        'Content-Type': 'application/json'
+                    }
+                })
+                    .then(response => response.json())
+                    .then(async (data) => {
+                        console.log(data);
+                        getPermissionAction(data);
+                        // FsService.writeJsonFile(`permissions.json`, data)
+                        await this._setAsyncData('license_hunting', JSON.stringify(data));
+                    })
+                    .catch(error => {
+                        console.log(error);
+                        getPermissionAction([]);
+                    });
+            } else {
+                getPermissionAction([]);
+            }
+            
+        } else {
+            getPermissionAction([]);
+            alert('Нет подключения к интернету');
+        }
+    }
+
+    goMessage = async (message) => {
+        await this.fetchPermissions();
+        this.setState({
+            alertMessage: true,
+        });
+    }
+
     componentWillUnmount() {
         const { setLocationUser } = this.props;
         setLocationUser(null);
+        this.setState({
+            alertMessage: false,
+        });
     }
 
      _setAsyncData = async (label, value) => {
@@ -125,10 +173,10 @@ class DetailsPage extends React.Component {
 
 
     render() {
-        const { navigation, locationLoading, location, permission } = this.props;
+        const { navigation, locationLoading, location, permission, permissionLoading } = this.props;
         const { title, info, data, user, headerTitle } = navigation.state.params;
 
-        if (locationLoading)
+        if (locationLoading || permissionLoading)
             return <Loading />
 
         return(
@@ -141,13 +189,16 @@ class DetailsPage extends React.Component {
                     )
                 }
                 <ImageBackground source={require('../img/login-bg.jpg')} style={{width: w, flex: 1}}>
-                        {
-                            permission && (
-                                <AddedButton onPress={this.openCreateForm}>
-                                    <Text style={{fontSize: 24, color: "#fff"}}>+</Text>
-                                </AddedButton>
-                            )
-                        }
+                    {
+                        permission && (
+                            <AddedButton onPress={() => navigation.navigate('CREATE_PERMISSIONS', ({ goMessage: this.goMessage }))}>
+                                <Text style={{fontSize: 24, color: "#fff"}}>+</Text>
+                            </AddedButton>
+                        )
+                    }
+                    {
+                        this.state.alertMessage && <AlertMessage />
+                    }
                     <Content>
                         <View style={{paddingBottom: 40}}>
                             {
@@ -173,10 +224,14 @@ const mapStateToProps = state => ({
     permission: state.permission.permission,
     locationLoading: state.user.locationLoading,
     location: state.user.location,
+    user: state.user.user,
+    permissionLoading: state.permission.permissionLoading,
+    connected: state.connect.connected,
 });
 
 const mapDispatchToProps = {
-    getLocationUser, setLocationUser
+    getLocationUser, setLocationUser, getPermissionAction,
+    fetchPermission
 };
 
 export default connect(mapStateToProps, mapDispatchToProps)(DetailsPage);

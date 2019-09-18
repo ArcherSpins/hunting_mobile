@@ -25,3 +25,5 @@ export {
 export * from './info';
 export * from './violation_detail';
 export * from './permission_detail';
+
+export { default as CreatePermissions } from './createPermissions';

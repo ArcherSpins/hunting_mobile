@@ -107,3 +107,8 @@ export const setPermissionDetailAnimals = (animals) => ({
 
 export * from './connected';
 export * from './default_data_actions';
+
+
+export const fetchPermission = () => ({
+    type: 'FETCH_PERMISSION'
+})

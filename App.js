@@ -19,6 +19,7 @@ import {
   ViolationDetail, 
   PermissionDetail,
   UploadPage,
+  CreatePermissions,
 } from './src/pages';
 import { Loading } from './src/components';
 import reducer from './src/redux/reducers';
@@ -97,6 +98,12 @@ const AppNavigator = createAppContainer(createStackNavigator(
           header: null,
         },
       },
+      CREATE_PERMISSIONS: {
+        screen: CreatePermissions,
+        navigationOptions: {
+          header: null,
+        },
+      }
   },
   {
       initialRouteName: "FORM_PAGE"

@@ -12,6 +12,11 @@ export default (state = initialState, action) => {
                 permission: action.payload,
                 permissionLoading: false,
             };
+         case 'FETCH_PERMISSION':
+            return {
+                ...state,
+                permissionLoading: true,
+            }   
         default: return state;
     }
 }

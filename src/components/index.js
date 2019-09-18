@@ -19,3 +19,6 @@ export * from './UserComponent';
 export * from './NotFound';
 export * from './LoadingUploading';
 export * from './Forms/FormCreatePermissions';
+
+
+export { default as AlertMessage } from './AlertMessage';

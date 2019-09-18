@@ -18,6 +18,7 @@
     "react-native-gesture-handler": "^1.4.1",
     "react-native-maps": "^0.25.0",
     "react-native-svg": "^9.8.4",
+    "react-native-ui-kitten": "^4.1.1",
     "react-native-vector-icons": "^6.6.0",
     "react-native-web": "^0.11.7",
     "react-navigation": "^4.0.0",
@@ -25,7 +26,6 @@
     "react-redux": "^7.1.1",
     "redux": "^4.0.4",
     "redux-thunk": "^2.3.0",
-    "rn-fetch-blob": "^0.10.16",
     "styled-components": "^4.3.2"
   },
   "devDependencies": {
