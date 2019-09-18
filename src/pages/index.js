@@ -25,5 +25,10 @@ export {
 export * from './info';
 export * from './violation_detail';
 export * from './permission_detail';
+export * from './regulation_hunt';
+export * from './hunter_bilet';
+export * from './permission_hunter';
+export * from './responsibility';
+export * from './hunting_period';
 
 export { default as CreatePermissions } from './createPermissions';

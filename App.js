@@ -19,7 +19,11 @@ import {
   ViolationDetail, 
   PermissionDetail,
   UploadPage,
-  CreatePermissions,
+  RegulationHunt,
+  HunterBilet,
+  PermissionHunter,
+  Responsibility,
+  HuntingPeriod,
 } from './src/pages';
 import { Loading } from './src/components';
 import reducer from './src/redux/reducers';
@@ -98,8 +102,32 @@ const AppNavigator = createAppContainer(createStackNavigator(
           header: null,
         },
       },
-      CREATE_PERMISSIONS: {
-        screen: CreatePermissions,
+      REGULATION_HUNT: {
+        screen: RegulationHunt,
+        navigationOptions: {
+          header: null,
+        },
+      },
+      HUNTER_BILET: {
+        screen: HunterBilet,
+        navigationOptions: {
+          header: null,
+        },
+      },
+      PERMISSION_HUNTER: {
+        screen: PermissionHunter,
+        navigationOptions: {
+          header: null,
+        },
+      },
+      RESPONSIBILITY: {
+        screen: Responsibility,
+        navigationOptions: {
+          header: null,
+        },
+      },
+      HUNTING_PERIOD: {
+        screen: HuntingPeriod,
         navigationOptions: {
           header: null,
         },

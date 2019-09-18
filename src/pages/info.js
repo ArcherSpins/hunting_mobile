@@ -11,27 +11,27 @@ const data = [
     {
         id: 1,
         title: 'Правила охоты',
-        path: 'HOME'
+        path: 'REGULATION_HUNT'
     },
     {
         id: 2,
         title: 'Как получить охотничий билет',
-        path: 'HOME'
+        path: 'HUNTER_BILET'
     },
     {
         id: 3,
         title: 'Как получить разрешение на охоту',
-        path: 'HOME'
+        path: 'PERMISSION_HUNTER '
     },
     {
         id: 4,
         title: 'Ответственность за нарушение',
-        path: 'HOME'
+        path: 'RESPONSIBILITY'
     },
     {
         id: 5,
         title: 'Сроки охоты',
-        path: 'HOME'
+        path: 'HUNTING_PERIOD'
     }
 ]
 
@@ -43,7 +43,6 @@ const InfoPage = ({ navigation }) => {
     return (
         <ContainerPage>
             <HeaderDetails onGoBack={() => navigation.goBack()} title={title || 'Информация'} />
-
             <StatusBar backgroundColor="#36404a" barStyle="light-content" />
             <ImageBackground source={require('../img/login-bg.jpg')} style={{width: w, flex: 1}}>
                 <Content>
