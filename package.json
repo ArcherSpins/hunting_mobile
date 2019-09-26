@@ -21,6 +21,7 @@
     "react-native-ui-kitten": "^4.1.1",
     "react-native-vector-icons": "^6.6.0",
     "react-native-web": "^0.11.7",
+    "react-native-yandex-payment": "^1.0.5",
     "react-navigation": "^4.0.0",
     "react-navigation-stack": "^1.5.1",
     "react-redux": "^7.1.1",

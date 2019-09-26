@@ -173,8 +173,8 @@ class DetailsPage extends React.Component {
 
 
     render() {
-        const { navigation, locationLoading, location, permission, permissionLoading } = this.props;
-        const { title, info, data, user, headerTitle } = navigation.state.params;
+        const { navigation, locationLoading, location, permissionLoading } = this.props;
+        const { title, info, data, user, headerTitle, permissionPage } = navigation.state.params;
 
         if (locationLoading || permissionLoading)
             return <Loading />
@@ -184,13 +184,13 @@ class DetailsPage extends React.Component {
                 <HeaderDetails onGoBack={() => navigation.goBack()} title={headerTitle || title} />
                 <StatusBar backgroundColor="#36404a" barStyle="light-content" />
                 {
-                    this.state.createPermission && permission && (
+                    this.state.createPermission && permissionPage && (
                         <CreatePermission closeModal={this.closeCreateForm} />
                     )
                 }
                 <ImageBackground source={require('../img/login-bg.jpg')} style={{width: w, flex: 1}}>
                     {
-                        permission && (
+                        permissionPage && (
                             <AddedButton onPress={() => navigation.navigate('CREATE_PERMISSIONS', ({ goMessage: this.goMessage }))}>
                                 <Text style={{fontSize: 24, color: "#fff"}}>+</Text>
                             </AddedButton>

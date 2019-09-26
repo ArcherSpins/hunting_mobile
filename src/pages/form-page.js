@@ -40,6 +40,7 @@ class FormPage extends PureComponent {
             if (result) {
                 authUserAction(JSON.parse(result));
                 navigation.navigate('HOME');
+                this.setState({ registrator: true })
             }
 
             this.validation();
@@ -48,6 +49,10 @@ class FormPage extends PureComponent {
         } finally {
             stopLoadingFormAction();
         }       
+    }
+
+    componentWillUnmount() {
+        this.setState({registrator: false});
     }
 
     componentDidUpdate() {
@@ -157,27 +162,6 @@ class FormPage extends PureComponent {
                 } catch(err) {
                     console.log(err)
                 }
-                // try {
-                //     var request = new XMLHttpRequest();
-                //     request.onreadystatechange = (e) => {
-                //         if (request.readyState !== 4) {
-                //             return;
-                //         }
-
-                //         if (request.status === 200) {
-                //             console.log(request);
-                //         } else {
-                //             console.log(request.status + ' - ' + request.responseText);
-                //         }
-                //     };
-
-                //     request.setRequestHeader('Authorization', 'uptec4nGePz9QDqqAz0bEmV3B15NEnUq');
-
-                //     request.open('GET', `${url}/api/v1/Customer/${seria.value}/${nomer.value}`);
-                //     request.send();
-                // } catch (error) {
-                //     console.log(error)
-                // }
             } else {
                 alert('нет подключения к интернету');
             }
@@ -186,11 +170,15 @@ class FormPage extends PureComponent {
     }
 
     render() {
-        const { seria, nomer } = this.state;
-        const { formLoading } = this.props;
+        const { seria, nomer, registrator } = this.state;
+        const { formLoading, user, navigation } = this.props;
 
-        if (formLoading)
+        if (formLoading || !registrator || !user)
             return <Loading />;
+
+        if (user) {
+            navigation.navigate('HOME');
+        }
 
         return (
             <Container>

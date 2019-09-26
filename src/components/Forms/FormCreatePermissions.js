@@ -2,6 +2,7 @@ import React from 'react';
 import { Modal, Text, Picker, View } from 'react-native';
 import styled from 'styled-components';
 import { Form, Item, Input, Button } from 'native-base';
+import YandexPayment from 'react-native-yandex-payment';
 import { url } from '../../url';
 
 const Container = styled.View`
@@ -177,6 +178,26 @@ class CreatePermission extends React.Component {
         });
     }
 
+    getFormPay = async () => {
+        const shop = {
+            id: '638856',
+            token: 'test_NjM4ODU2u5z7NQXBFK9i61pSvgl5uyLQGv9hthWRGe8',
+            name: 'ООО "ЭЛЕКТРОН-ИТ"',
+            description: 'Shop description',
+        };
+    
+        const payment = {
+            amount: 1.0,
+            currency: 'RUB', // 'RUB' | 'USD' | 'EUR'
+            types: ['BANK_CARD'], // 'YANDEX_MONEY' | 'BANK_CARD' | 'SBERBANK' | 'PAY'. PAY - means Google Pay or Apple Pay
+        };
+    
+        const paymentToken = await YandexPayment.show(shop, payment);
+        console.log(paymentToken.token); // payment token
+        console.log(paymentToken.type); // payment method type
+        return paymentToken.token;
+    }
+
     onSubmit = () => {
         const { onSubmit } = this.props;
         let status = true;
@@ -195,7 +216,9 @@ class CreatePermission extends React.Component {
             }
         }
 
-        onSubmit(this.state);
+        this.getFormPay();
+
+        // onSubmit(this.state);
     }
 
     render() {

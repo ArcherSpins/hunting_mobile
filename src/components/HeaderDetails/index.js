@@ -72,25 +72,30 @@ export class HeaderDetails extends Component {
       );
 
     return (
-      <Header style={{backgroundColor: '#36404a', height: 70, paddingTop: 15}}>
-        <Left>
-            <Button onPress={onGoBack} transparent>
+      <Header style={{backgroundColor: '#36404a', height: 70, paddingTop: 15, justifyContent: 'space-between'}}>
+        <Left style={{ marginRight: 30 }}>
+            <Button style={{minWidth: 50}} onPress={onGoBack} transparent>
               <Icon name='arrow-back' />
             </Button>
         </Left>
         <Body style={{width: '60%', minWidth: 200}}>
           <Title style={{width: '100%'}}>{ title }</Title>
         </Body>
-        {
-          searchIcon && !search ? 
-          (
-            <Right>
+        <Right>
+          {/* {
+            searchIcon && !search ? (
               <Button onPress={() => this.toggleSearch(true)} transparent>
                 <Icon name='search' />
               </Button>
-            </Right>
+            ) : null
+          } */}
+        </Right>
+        {/* {
+          searchIcon && !search ? 
+          (
+            
           ) : null
-        }
+        } */}
       </Header>
     );
   }

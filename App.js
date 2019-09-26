@@ -24,6 +24,7 @@ import {
   PermissionHunter,
   Responsibility,
   HuntingPeriod,
+  CreatePermissions,
 } from './src/pages';
 import { Loading } from './src/components';
 import reducer from './src/redux/reducers';
@@ -50,6 +51,12 @@ const AppNavigator = createAppContainer(createStackNavigator(
       },
       INFO: {
         screen: InfoPage,
+        navigationOptions: {
+          header: null,
+        },
+      },
+      CREATE_PERMISSIONS: {
+        screen: CreatePermissions,
         navigationOptions: {
           header: null,
         },

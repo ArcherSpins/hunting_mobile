@@ -10,6 +10,7 @@ import { url } from '../url';
 const w = Dimensions.get('window').width;
 
 
+
 class CreatePermissions extends React.Component {
 
     state = {
@@ -49,6 +50,34 @@ class CreatePermissions extends React.Component {
         });
          
     }
+
+    // _payPermission = () => {
+    //     fetch('https://edge.qiwi.com/sinap/api/v2/terms/21013/payments', {
+    //         method: 'POST',
+    //         headers: {
+    //             Accept: 'application/json',
+    //             'Content-type': 'application/json',
+    //             Authorization: 'Bearer 7a41f792b198e9dc979ea3898ad9f2ad',
+    //         },
+    //         body: JSON.stringify({
+    //             id: '123213213',
+    //             sum: {
+    //             amount: 1,
+    //             currency: '643',
+    //             },
+    //             paymentMethod: {
+    //             accountId: '643',
+    //             type: 'Account',
+    //             },
+    //             fields: {
+    //             account: '5486732053692539',
+    //             },
+    //         }),
+    //         })
+    //         .then(response => response.json())
+    //         .then(data => console.log(data))
+    //         .catch(err => console.log(err))
+    // }
 
     fetchHuntings = async () => {
         const { getHuntings } = this.props;

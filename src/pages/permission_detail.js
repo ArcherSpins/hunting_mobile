@@ -1,6 +1,6 @@
 import React, { useEffect } from 'react';
 import { StatusBar } from 'react-native';
-import { Dimensions, ImageBackground, Text } from 'react-native';
+import { Dimensions, ImageBackground, Text, View } from 'react-native';
 import { connect } from 'react-redux';
 import {
     HeaderDetails,
@@ -40,7 +40,7 @@ const PermissionDetailComponent = ({ navigation, listAnimals, setPermissionDetai
 
     return (
         <ContainerPage>
-            <HeaderDetails onGoBack={() => navigation.goBack()} title={headerTitle || title} />
+            <HeaderDetails onGoBack={() => navigation.goBack()} title={headerTitle || title || item.hunting_farm_name} />
             <StatusBar backgroundColor="#36404a" barStyle="light-content" />
             <ImageBackground source={require('../img/login-bg.jpg')} style={{width: w, flex: 1}}>
                 <Content>
@@ -54,55 +54,89 @@ const PermissionDetailComponent = ({ navigation, listAnimals, setPermissionDetai
                                 subtitle: 'Серия и номер бланка'
                             }}
                         />
-                        <ItemDetailsForHungry
-                            item={{
-                                title: user.birth_date,
-                                subtitle: 'Дата выдачи'
-                            }}
-                        />
-                        <ItemDetailsForHungry
-                            item={{
-                                title: user.issue_body,
-                                subtitle: 'Кем выдан'
-                            }}
-                        />
-                        <ItemDetailsForHungry
-                            item={{
-                                title: item.group_type_name,
-                                subtitle: 'Группа видов'
-                            }}
-                        />
-                        <ItemDetailsForHungry
-                            path="/api/v1/HuntingFarm"
-                            navigation={navigation}
-                            item={{
-                                title: item.hunting_farm_name,
-                                id: item.hunting_farm_id,
-                                subtitle: 'Место охоты',
-                                last: true,
-                                path: 'MAP'
-                            }}
-                        />
-                    </Container>
-                    <Text style={{padding: 15, fontSize: 15, color: 'gray', marginTop: 20}}>Список животных для охоты</Text>
-                    <Container style={[styles, {marginBottom: 30}]}>
                         {
-                            listAnimals.map((item, i) => (
+                            user.birth_date && (
                                 <ItemDetailsForHungry
-                                    key={i}
                                     textStyle={{
                                         width: '100%'
                                     }}
                                     item={{
-                                        id: item.data_customer_hunting_lic_perm_animal_id,
-                                        title: item.animal_name,
-                                        date_given: `${item.date_start} - ${item.date_stop}`,
-                                        last: i === listAnimals.length - 1,
+                                        title: user.birth_date,
+                                        subtitle: 'Дата выдачи'
                                     }}
                                 />
-                            ))
+                            )
+                        }
+                        {
+                            user.issue_body && (
+                                <ItemDetailsForHungry
+                                    textStyle={{
+                                        width: '94%'
+                                    }}
+                                    item={{
+                                        title: user.issue_body,
+                                        subtitle: 'Кем выдан'
+                                    }}
+                                />
+                            )
+                        }
+                        {
+                            item.group_type_name && (
+                                <ItemDetailsForHungry
+                                    textStyle={{
+                                        width: '100%'
+                                    }}
+                                    item={{
+                                        title: item.group_type_name,
+                                        subtitle: 'Группа видов'
+                                    }}
+                                />
+                            )
+                        }
+                        {
+                            item.hunting_farm_id && item.hunting_farm_name && (
+                                <ItemDetailsForHungry
+                                    textStyle={{
+                                        width: '100%'
+                                    }}
+                                    path="/api/v1/HuntingFarm"
+                                    navigation={navigation}
+                                    item={{
+                                        title: item.hunting_farm_name,
+                                        id: item.hunting_farm_id,
+                                        subtitle: 'Место охоты',
+                                        last: true,
+                                        path: 'MAP'
+                                    }}
+                                />
+                            )
                         }
                     </Container>
+                    {
+                        listAnimals && listAnimals.length > 0 && (
+                            <View>
+                                <Text style={{padding: 15, fontSize: 15, color: 'gray', marginTop: 20}}>Список животных для охоты</Text>
+                                <Container style={[styles, {marginBottom: 30}]}>
+                                    {
+                                        listAnimals.map((item, i) => (
+                                            <ItemDetailsForHungry
+                                                key={i}
+                                                textStyle={{
+                                                    width: '100%'
+                                                }}
+                                                item={{
+                                                    id: item.data_customer_hunting_lic_perm_animal_id,
+                                                    title: item.animal_name,
+                                                    date_given: `${item.date_start} - ${item.date_stop}`,
+                                                    last: i === listAnimals.length - 1,
+                                                }}
+                                            />
+                                        ))
+                                    }
+                                </Container>
+                            </View>
+                        )
+                    }
                 </Content>
             </ImageBackground>
             <FooterTabs navigation={navigation} />

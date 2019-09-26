@@ -177,7 +177,7 @@ class MainPage extends React.PureComponent {
                                     title="Разрешение на охоту"
                                     meta={permission.length > 0 ? `найдено: ${permission.length}` : 'не найдены'}
                                     url="DETAILS"
-                                    permission={true}
+                                    permissionPage={true}
                                     navigation={navigation}
                                     data={permission}
                                     info={true}

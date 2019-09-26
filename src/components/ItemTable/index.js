@@ -75,20 +75,18 @@ export const ItemDetailsForHungry = (props) => {
     const {item, navigation = {navigate: () => {}}, style, last, children, arrow, textStyle} = props;
     return (
         <ListItem onPress={() => item.path ? navigation.navigate(item.path, ({...props})) : console.log('not path')} style={[{borderBottomWidth: item.last || last ? 0 : 1}, style]}>
-            <Left>
-                <Div>
-                    {
-                        item.subtitle ? <Subtitle>{ item.subtitle }</Subtitle>
-                        : null
-                    }
-                    <Text style={[textStyle]}>{ item.title || item.name || children }</Text>
-                    {
-                        item.date_given ? <Subtitle>{ item.date_given }</Subtitle>
-                        : null
-                    }
-                </Div>
+            <Left style={{flexDirection: 'column', width: '80%', minWidth:'90%'}}>
+                {
+                    item.subtitle ? <Subtitle>{ item.subtitle }</Subtitle>
+                    : null
+                }
+                <Text style={[{width: '100%', minWidth:150, padding: 0}, textStyle]}>{ item.title || item.name || children }</Text>
+                {
+                    item.date_given ? <Subtitle>{ item.date_given }</Subtitle>
+                    : null
+                }
             </Left>
-            <Right style={{flexDirection: 'row', alignItems: 'center', minWidth: 150, justifyContent: 'flex-end'}}>
+            <Right style={{flexDirection: 'row', alignItems: 'center', minWidth: '10%', justifyContent: 'flex-start'}}>
                 {
                     item.active ?
                         <IconItem style={{marginRight: 10}} name={item.iconName || "checkcircle"} size={item.iconSize || 24} color={item.iconColor || `#4caf50`} />
