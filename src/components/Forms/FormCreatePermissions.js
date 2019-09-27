@@ -194,7 +194,7 @@ class CreatePermission extends React.Component {
     
         const paymentToken = await YandexPayment.show(shop, payment);
         console.log(paymentToken.token); // payment token
-        console.log(paymentToken.type); // payment method type
+        console.log(paymentToken); // payment method type
         return paymentToken.token;
     }
 
