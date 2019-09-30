@@ -77,23 +77,6 @@ class CreatePermission extends React.Component {
                     Charge: null
                 }
             }
-            // type_hunting: {
-            //     value: '',
-            //     selected: false,
-            //     error: false,
-            // },
-            // seria_blank: {
-            //     value: '',
-            //     error: false,
-            // },
-            // number_blank: {
-            //     value: '',
-            //     error: false,
-            // },
-            // position_employee: {
-            //     value: '',
-            //     error: false,
-            // }
         }
 
         this.onChange = this.onChange.bind(this);
@@ -179,26 +162,27 @@ class CreatePermission extends React.Component {
     }
 
     getFormPay = async () => {
+        console.log(this.state.stamp_duty.data.Tariff);
         const shop = {
             id: '638856',
             token: 'test_NjM4ODU2u5z7NQXBFK9i61pSvgl5uyLQGv9hthWRGe8',
             name: 'ООО "ЭЛЕКТРОН-ИТ"',
             description: 'Shop description',
         };
-    
+
         const payment = {
-            amount: 1.0,
+            amount: this.state.stamp_duty.data.Tariff,
             currency: 'RUB', // 'RUB' | 'USD' | 'EUR'
             types: ['BANK_CARD'], // 'YANDEX_MONEY' | 'BANK_CARD' | 'SBERBANK' | 'PAY'. PAY - means Google Pay or Apple Pay
         };
-    
+
         const paymentToken = await YandexPayment.show(shop, payment);
         console.log(paymentToken.token); // payment token
         console.log(paymentToken); // payment method type
         return paymentToken.token;
     }
 
-    onSubmit = () => {
+    onSubmit = async () => {
         const { onSubmit } = this.props;
         let status = true;
         for(let i in this.state) {
@@ -216,9 +200,9 @@ class CreatePermission extends React.Component {
             }
         }
 
-        this.getFormPay();
+        const token = await this.getFormPay();
 
-        // onSubmit(this.state);
+        onSubmit(this.state, token);
     }
 
     render() {
@@ -306,59 +290,7 @@ class CreatePermission extends React.Component {
                             </FieldBlock>
                         ) : null
                     }
-                    {/* <FieldBlock>
-                        <Label>Вид охоты</Label>
-                        <View style={{
-                            borderColor: this.state.type_hunting.error ? 'tomato': 'rgba(0,0,0,0.3)',
-                            borderWidth: 1,
-                            borderRadius: 4
-                        }}>
-                            <Picker
-                                selectedValue={this.state.type_hunting.value || ''}
-                                enabled={this.state.season.selected}
-                                style={{
-                                    height: 40,
-                                    width: '100%',
-                                }}
-                                onValueChange={(itemValue, itemIndex) =>
-                                    this.onChange('type_hunting', {value: itemValue})
-                                }>
-                                <Picker.Item label="Java" value="java" />
-                                <Picker.Item label="JavaScript" value="js" />
-                            </Picker>
-                        </View>
-                    </FieldBlock>
-                    <FieldBlock>
-                        <Label>Серия бланка</Label>
-                        <View style={{
-                            borderColor: this.state.seria_blank.error ? 'tomato': 'rgba(0,0,0,0.3)',
-                            borderWidth: 1,
-                            borderRadius: 4
-                        }}>
-                            <Input style={{ height: 40 }} onChange={this.changeSeria} value={this.state.seria_blank.value} />
-                        </View>
-                    </FieldBlock>
-                    <FieldBlock>
-                        <Label>Номер бланка</Label>
-                        <View style={{
-                            borderColor: this.state.number_blank.error ? 'tomato': 'rgba(0,0,0,0.3)',
-                            borderWidth: 1,
-                            borderRadius: 4
-                        }}>
-                            <Input style={{ height: 40 }} onChange={(value) => this.changeInput('number_blank', value)} value={this.state.number_blank.value} />
-                        </View>
-                    </FieldBlock>
-                    <FieldBlock>
-                        <Label>Должность сотрудника</Label>
-                        <View style={{
-                            borderColor: this.state.position_employee.error ? 'tomato': 'rgba(0,0,0,0.3)',
-                            borderWidth: 1,
-                            borderRadius: 4
-                        }}>
-                            <Input style={{ height: 40 }} onChange={(value) => this.changeInput('position_employee', value)} value={this.state.position_employee.value} />
-                        </View>
-                    </FieldBlock> */}
-                    <Button onPress={this.onSubmit} primary><Text style={{textAlign: 'center', width: '100%', color: '#fff'}}> Создать </Text></Button>
+                    <Button style={{ marginTop: 25 }} onPress={this.onSubmit} primary><Text style={{textAlign: 'center', width: '100%', color: '#fff'}}> Создать </Text></Button>
                 </ModalComp>
             </Container>
         );

@@ -27,7 +27,6 @@ class FormPage extends PureComponent {
                 success: false,
             },
         }
-        
         // NetInfo.isConnected.fetch().then(isConnected => {
         //     alert(isConnected);
         // });

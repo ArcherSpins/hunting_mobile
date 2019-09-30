@@ -30,9 +30,10 @@ class DetailsPage extends React.Component {
             ready: false,
             where: {lat: null, lng: null},
             error: null,
-            
             alertMessage: false,
             createPermission: false,
+            loading: false,
+            dataPermissions: []
         }
     }
 
@@ -95,6 +96,7 @@ class DetailsPage extends React.Component {
                     .then(response => response.json())
                     .then(async (data) => {
                         console.log(data);
+                        this.setState({ dataPermissions: data });
                         getPermissionAction(data);
                         // FsService.writeJsonFile(`permissions.json`, data)
                         await this._setAsyncData('license_hunting', JSON.stringify(data));
@@ -106,14 +108,16 @@ class DetailsPage extends React.Component {
             } else {
                 getPermissionAction([]);
             }
-            
+
         } else {
             getPermissionAction([]);
             alert('Нет подключения к интернету');
         }
+        this.setState({ loading: false, })
     }
 
     goMessage = async (message) => {
+        this.setState({ loading: true, })
         await this.fetchPermissions();
         this.setState({
             alertMessage: true,
@@ -175,8 +179,8 @@ class DetailsPage extends React.Component {
     render() {
         const { navigation, locationLoading, location, permissionLoading } = this.props;
         const { title, info, data, user, headerTitle, permissionPage } = navigation.state.params;
-
-        if (locationLoading || permissionLoading)
+        console.log(data)
+        if (locationLoading || permissionLoading || this.state.loading)
             return <Loading />
 
         return(
@@ -207,7 +211,9 @@ class DetailsPage extends React.Component {
                                                             textStyle={{width: '100%'}}
                                                             navigation={navigation}
                                                             Item={info ? ItemDetailsForInfo : ItemDetailsForHungry}
-                                                            data={data.map((item, i) => i === data.length - 1 ? {...item, last: true} : item)} />
+                                                            data={this.state.dataPermissions.length < data.length 
+                                                        ? data.map((item, i) => i === data.length - 1 ? {...item, last: true} : item)
+                                                        : this.state.dataPermissions.map((item, i) => i === data.length - 1 ? {...item, last: true} : item)} />
                                     || <NotFoundText />
                                 : <UserComponent location={location} navigation={navigation} user={user} />
                             }

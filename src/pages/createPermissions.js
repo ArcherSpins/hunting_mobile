@@ -15,6 +15,7 @@ class CreatePermissions extends React.Component {
 
     state = {
         errorLoad: false,
+        loading: false,
     }
 
     _setAsyncData = async (label, value) => {
@@ -24,7 +25,7 @@ class CreatePermissions extends React.Component {
             console.log(error);
         }
     }
-    
+
     _getAsyncData = async (label) => {
         try {
             const value = await AsyncStorage.getItem(label);
@@ -38,6 +39,7 @@ class CreatePermissions extends React.Component {
 
     componentDidMount = async () => {
         const { getHuntings } = this.props;
+        this.setState({ loading: false });
         NetInfo.isConnected.fetch().then(async isConnected => {
             if (isConnected) {
                 await this.fetchHuntings();
@@ -48,36 +50,7 @@ class CreatePermissions extends React.Component {
                 huntings ? getHuntings(JSON.parse(huntings)) : this.setState({ errorLoad: true });
             }
         });
-         
     }
-
-    // _payPermission = () => {
-    //     fetch('https://edge.qiwi.com/sinap/api/v2/terms/21013/payments', {
-    //         method: 'POST',
-    //         headers: {
-    //             Accept: 'application/json',
-    //             'Content-type': 'application/json',
-    //             Authorization: 'Bearer 7a41f792b198e9dc979ea3898ad9f2ad',
-    //         },
-    //         body: JSON.stringify({
-    //             id: '123213213',
-    //             sum: {
-    //             amount: 1,
-    //             currency: '643',
-    //             },
-    //             paymentMethod: {
-    //             accountId: '643',
-    //             type: 'Account',
-    //             },
-    //             fields: {
-    //             account: '5486732053692539',
-    //             },
-    //         }),
-    //         })
-    //         .then(response => response.json())
-    //         .then(data => console.log(data))
-    //         .catch(err => console.log(err))
-    // }
 
     fetchHuntings = async () => {
         const { getHuntings } = this.props;
@@ -98,23 +71,25 @@ class CreatePermissions extends React.Component {
         })
     }
 
-    onSubmit = (data) => {
+    onSubmit = (data, token) => {
         const { goMessage } = this.props.navigation.state.params;
         const { user } = this.props;
-        fetch(`${url}/api/v1/Customer/Permission/Add`, {
+        this.setState({ loading: true });
+        fetch(`${url}/api/v1/Seasons/Payment`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
                 Authorization: 'uptec4nGePz9QDqqAz0bEmV3B15NEnUq'
             },
             body: JSON.stringify({
+                Payment_token: token,
                 Hunting_farm_season_id: data.season.value,
                 Customer_hunting_lic_id: user.data_customer_hunting_lic_id,
             })
         })
         .then(response => response.json())
         .then(async data => {
-            console.log(data);
+            this.setState({ loading: false });
             await goMessage();
             this.props.navigation.goBack();
         })
@@ -125,8 +100,8 @@ class CreatePermissions extends React.Component {
 
     render() {
         const { user, navigation, huntings, loadingHunting } = this.props;
-        
-        if (loadingHunting) {
+
+        if (loadingHunting || this.state.loading) {
             return <Loading />
         }
 
