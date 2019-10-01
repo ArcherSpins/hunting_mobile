@@ -45,42 +45,37 @@ export class UserComponent extends React.PureComponent {
         return (
            <ContainerList>
                <ItemDetailsForHungry
-                    textStyle={{width: '100%'}}
                    item={{
                        subtitle: 'ФИО',
                        name: user.customer_name,
                    }}
                />
                <ItemDetailsForHungry
-                    textStyle={{width: '100%'}}
                    item={{
                        subtitle: 'Дата рождения',
                        name: user.birth_date,
                    }}
                />
                <ItemDetailsForHungry
-                    textStyle={{width: '100%'}}
                    item={{
                        subtitle: 'Номер билета',
                        name: user.serial + ' ' + user.number,
                    }}
                />
                <ItemDetailsForHungry
-                    textStyle={{width: '100%'}}
+                    textStyle={{paddingRight: 20}}
                    item={{
                        subtitle: 'Кем выдан',
                        name: user.issue_body,
                    }}
                />
                <ItemDetailsForHungry
-                    textStyle={{width: '100%'}}
                    item={{
                        subtitle: 'Дата выдачи',
                        name: user.issue_date,
                    }}
                />
                <ItemDetailsForHungry
-                    textStyle={{width: '100%'}}
                    item={{
                        subtitle: 'Статус',
                        name: user.status,
@@ -88,7 +83,6 @@ export class UserComponent extends React.PureComponent {
                    }}
                />
                <ItemDetailsForHungry
-                    textStyle={{width: '100%'}}
                   item={{
                       subtitle: 'Местоположение',
                       name: permission ? 'Разрешено охотиться' : 'Запрещено охотиться',

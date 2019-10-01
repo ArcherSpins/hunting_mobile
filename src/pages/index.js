@@ -9,6 +9,8 @@ import ViolationPage from './violation';
 import DetailsPage from './details';
 import UploadPage from './upload';
 
+export * from './defaultPage';
+
 export {
     HuntingPage,
     AnimalPage,

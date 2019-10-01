@@ -25,12 +25,19 @@ import {
   Responsibility,
   HuntingPeriod,
   CreatePermissions,
+  DefaultPage
 } from './src/pages';
 import { Loading } from './src/components';
 import reducer from './src/redux/reducers';
 
 const AppNavigator = createAppContainer(createStackNavigator(
   {
+      DEFAULT_PAGE: {
+        screen: DefaultPage,
+        navigationOptions: {
+          header: null,
+        },
+      },
       FORM_PAGE: {
         screen: FormPage,
         navigationOptions: {
@@ -141,7 +148,7 @@ const AppNavigator = createAppContainer(createStackNavigator(
       }
   },
   {
-      initialRouteName: "FORM_PAGE"
+      initialRouteName: "DEFAULT_PAGE"
   }
 ));
 

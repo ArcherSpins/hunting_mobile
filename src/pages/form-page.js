@@ -32,24 +32,6 @@ class FormPage extends PureComponent {
         // });
     }
 
-    componentDidMount = async () => {
-        const { authUserAction, stopLoadingFormAction, navigation } = this.props;
-        try {
-            const result = await this._getAsyncData('user');
-            if (result) {
-                authUserAction(JSON.parse(result));
-                navigation.navigate('HOME');
-                this.setState({ registrator: true })
-            }
-
-            this.validation();
-        } catch(err) {
-            console.log(err)
-        } finally {
-            stopLoadingFormAction();
-        }       
-    }
-
     componentWillUnmount() {
         this.setState({registrator: false});
     }
@@ -103,7 +85,7 @@ class FormPage extends PureComponent {
                 }
             });
         }
-    } 
+    }
 
     changeNomer = (e) => {
         const { nomer } = this.state;
@@ -125,22 +107,10 @@ class FormPage extends PureComponent {
         }
     };
 
-    _getAsyncData = async (label) => {
-        try {
-            const value = await AsyncStorage.getItem(label);
-            if (value) {
-                return value;
-            }
-        } catch (error) {
-            console.log(error);
-        }
-    }
-
     submitFormAuth = () => {
         const { seria, nomer } = this.state;
         const { navigation, authUserAction } = this.props;
 
-        console.log(seria, nomer)
         NetInfo.isConnected.fetch().then(isConnected => {
             if (isConnected) {
                 try {
@@ -165,15 +135,11 @@ class FormPage extends PureComponent {
                 alert('нет подключения к интернету');
             }
         });
-        
     }
 
     render() {
         const { seria, nomer, registrator } = this.state;
         const { formLoading, user, navigation } = this.props;
-
-        if (formLoading || !registrator || !user)
-            return <Loading />;
 
         if (user) {
             navigation.navigate('HOME');

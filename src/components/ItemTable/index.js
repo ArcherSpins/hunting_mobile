@@ -6,6 +6,15 @@ import IconItem from 'react-native-vector-icons/AntDesign';
 import IconEnt from 'react-native-vector-icons/Entypo';
 import { Icon, ListItem, Text, Left, Right } from 'native-base';
 
+const ItemTouch = styled.TouchableOpacity`
+    padding: 10px;
+    border-bottom-width: 1px;
+    border-color: #c5c5c5;
+    &:nth-child(n+2) {
+        border-bottom: none;
+    }
+`;
+
 const Img = styled.Image`
     width: 50px;
     height: 55px;
@@ -24,6 +33,7 @@ const Item = styled.View`
 const Title = styled.Text`
     font-size: 20px;
     padding-top: 10px;
+    width: 90%;
 `;
 
 const Parag = styled.Text`
@@ -32,6 +42,7 @@ const Parag = styled.Text`
     padding-bottom: 10px;
     border-bottom-width: 1px;
     border-color: #e0e0e0;
+    width: 90%;
 `;
 
 
@@ -61,8 +72,8 @@ export const ItemTable = ({icon, iconXml, title, content, last, navigation, url}
                     icon ? <SvgXml xml={icon} /> : null
                 }
                 <ContentComponent>
-                    <Title>{ title }</Title>
-                    <Parag style={{borderBottomWidth: last ? 0 : 1}}>{ content }</Parag>
+                    <Title  numberOfLines={1}>{ title }</Title>
+                    <Parag  numberOfLines={1} style={{borderBottomWidth: last ? 0 : 1}}>{ content }</Parag>
                 </ContentComponent>
                 <Icon name="arrow-forward" style={{color: 'gray', fontSize: 16}} />
             </Item>
@@ -75,16 +86,18 @@ export const ItemDetailsForHungry = (props) => {
     const {item, navigation = {navigate: () => {}}, style, last, children, arrow, textStyle} = props;
     return (
         <ListItem onPress={() => item.path ? navigation.navigate(item.path, ({...props})) : console.log('not path')} style={[{borderBottomWidth: item.last || last ? 0 : 1}, style]}>
-            <Left style={{flexDirection: 'column', width: '80%', minWidth:'90%'}}>
+            <Left style={{width: '85%', minWidth:'85%'}}>
+                <Div style={{paddingRight: 60}}>
                 {
-                    item.subtitle ? <Subtitle>{ item.subtitle }</Subtitle>
+                    item.subtitle ? <Subtitle  numberOfLines={1}>{ item.subtitle }</Subtitle>
                     : null
                 }
-                <Text style={[{width: '100%', minWidth:150, padding: 0}, textStyle]}>{ item.title || item.name || children }</Text>
+                <Text  numberOfLines={1} style={[{minWidth:150, padding: 0, textAlign: 'left'}, textStyle]}>{ item.title || item.name || children }</Text>
                 {
-                    item.date_given ? <Subtitle>{ item.date_given }</Subtitle>
+                    item.date_given ? <Subtitle  numberOfLines={1}>{ item.date_given }</Subtitle>
                     : null
                 }
+                </Div>
             </Left>
             <Right style={{flexDirection: 'row', alignItems: 'center', minWidth: '10%', justifyContent: 'flex-start'}}>
                 {
@@ -106,30 +119,30 @@ export const ItemDetailsForHungry = (props) => {
 }
 
 export const ItemDetailsForInfo = ({item, styleLeft, styleRight, navigation, children, textStyle}) => (
-    <ListItem onPress={() => item.path ? navigation.navigate(item.path, ({item})) : 'not path'} style={{borderBottomWidth: item.last ? 0 : 1}}>
-        <Left style={styleLeft}>
-            <Div>
+    <ItemTouch onPress={() => item.path ? navigation.navigate(item.path, ({item})) : 'not path'} style={{flexDirection: 'row', justifyContent: 'space-between'}}>
+        <Div style={{width: '60%', minWidth: '60%'}}>
+            <Div style={{ width: '100%' }}>
                 {
-                    item.subtitle || item.group_type_name ? <Subtitle>{ item.subtitle || item.group_type_name }</Subtitle>
+                    item.subtitle || item.group_type_name ? <Subtitle numberOfLines={1}>{ item.subtitle || item.group_type_name }</Subtitle>
                     : null
                 }
-                <Text style={[textStyle]}>{ item.title  || item.name || item.hunting_farm_name || children }</Text>
+                <Text numberOfLines={1} style={[{textAlign: 'left', width: '100%'}]}>{ item.title  || item.name || item.hunting_farm_name || children }</Text>
                 {
-                    item.date_given ? <Subtitle>{ item.date_given }</Subtitle>
+                    item.date_given ? <Subtitle numberOfLines={1}>{ item.date_given }</Subtitle>
                     : null
                 }
             </Div>
-        </Left>
-        <Right style={[{flexDirection: 'row', alignItems: 'center', minWidth: 150, justifyContent: 'flex-end'}, styleRight]}>
+        </Div>
+        <Div style={[{flexDirection: 'row', alignItems: 'center', justifyContent: 'flex-end', width: '40%', paddingRight: 10}, styleRight]}>
             {
-                item.active || item.back ? 
+                item.active || item.back ?
                 (
-                    <Status style={{backgroundColor: item.active ? '#4caf50' : '#f44336'}}>{ item.active ? 'сезон открыт' : 'нет корешка'}</Status>
+                    <Status numberOfLines={1} style={{backgroundColor: item.active ? '#4caf50' : '#f44336', width: 80}}>{ item.active ? 'сезон открыт' : 'нет корешка'}</Status>
                 )
                 : null
             }
-            <Icon name="arrow-forward" />
-        </Right>
-    </ListItem>
+            <Icon name="arrow-forward" style={{ color: 'gray', fontSize: 16 }} />
+        </Div>
+    </ItemTouch>
 )
 
