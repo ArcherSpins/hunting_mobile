@@ -1,6 +1,6 @@
 import React, { PureComponent } from 'react';
 import { Container, Header, Content, Form, Item, Input, Button, Icon, Text } from 'native-base';
-import { View, AsyncStorage, StatusBar } from 'react-native';
+import { View, AsyncStorage, StatusBar, BackHandler } from 'react-native';
 import axios from 'axios';
 import NetInfo from '@react-native-community/netinfo';
 import { connect } from 'react-redux';
@@ -32,8 +32,17 @@ class FormPage extends PureComponent {
         // });
     }
 
+    componentDidMount() {
+        this.backHandler = BackHandler.addEventListener('hardwareBackPress', this.handleBackPress);
+    }
+
+    handleBackPress = () => {
+        return true;
+    }
+
     componentWillUnmount() {
         this.setState({registrator: false});
+        this.backHandler.remove()
     }
 
     componentDidUpdate() {

@@ -1,21 +1,19 @@
 import React from 'react';
 import styled from 'styled-components';
-import { View, AsyncStorage, StatusBar } from 'react-native';
+import { View, AsyncStorage, StatusBar, ImageBackground } from 'react-native';
 import { connect } from 'react-redux';
 import { authUserAction } from '../redux/actions';
 
-const Container = styled.View`
-    flex: 1;
-    background-color: #20232a;
-    justify-content: center;
-    align-items: center;
-    width: 100%;
-    height: 100%;
+const Title = styled.Text`
+    text-align: center;
+    color: #063e86;
+    font-size: 18px;
 `;
 
 const Image = styled.Image`
-    width: 100%;
-    height: 100%;
+    width: 120px;
+    height: 120px;
+    margin-top: 30%;
 `;
 
 class DefaultPageComponent extends React.Component {
@@ -50,9 +48,12 @@ class DefaultPageComponent extends React.Component {
 
     render() {
         return (
-            <Container>
-                <Image source={{ uri: 'https://i.gifer.com/8p7m.gif' }} />
-            </Container>
+            <ImageBackground source={require('../img/login-bg.jpg')} style={{flex: 1, alignItems: 'center', paddingTop: 100}}>
+                <View style={{ alignItems: 'center' }}>
+                    <Title>МИНИСТЕРСТВО ПРИРОДНЫХ РЕСУРСОВ И ЭКОЛОГИИ РЕСПУБЛИКИ ДАГЕСТАН</Title>
+                    <Image source={require('../../assets/loading.gif')} />
+                </View>
+            </ImageBackground>
         );
     }
 }

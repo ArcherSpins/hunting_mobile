@@ -1,5 +1,5 @@
 import React from 'react';
-import { View, ScrollView, Dimensions, ImageBackground, AsyncStorage, StatusBar } from 'react-native';
+import { View, ScrollView, Dimensions, ImageBackground, AsyncStorage, StatusBar, BackHandler } from 'react-native';
 import axios from 'axios';
 import NetInfo from '@react-native-community/netinfo';
 import { connect } from 'react-redux';
@@ -45,15 +45,18 @@ class MainPage extends React.PureComponent {
 
     constructor() {
         super();
-        
         NetInfo.isConnected.addEventListener('connectionChange', (isConnected) => {
             // alert(isConnected ? 'отлично есть соединение' : 'нет интернета перехожу на локалку')
         });
     }
 
+    handleBackPress = () => {
+        return true;
+    }
+
     componentDidMount = async () => {
         const { getPermissionAction, getViolationsAction, setConnect } = this.props;
-
+        this.backHandler = BackHandler.addEventListener('hardwareBackPress', this.handleBackPress);
         NetInfo.isConnected.fetch().then(async isConnected => {
             setConnect(isConnected);
             if (isConnected) {
@@ -67,6 +70,10 @@ class MainPage extends React.PureComponent {
             }
         });
     };
+
+    componentWillUnmount() {
+        this.backHandler.remove()
+    }
 
     fetchPermissions = async () => {
         const { getPermissionAction, user, connected } = this.props;
