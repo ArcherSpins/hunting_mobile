@@ -1,6 +1,6 @@
 import React, { PureComponent } from 'react';
-import { Container, Header, Content, Form, Item, Input, Button, Icon, Text } from 'native-base';
-import { View, AsyncStorage, StatusBar, BackHandler } from 'react-native';
+import { Container, Header, Content, Form, Item, Input, Button, Icon, Text, AsyncStorage, DatePicker } from 'native-base';
+import { View, StatusBar, BackHandler } from 'react-native';
 import axios from 'axios';
 import NetInfo from '@react-native-community/netinfo';
 import { connect } from 'react-redux';
@@ -26,6 +26,10 @@ class FormPage extends PureComponent {
                 value: '018233',
                 success: false,
             },
+            date: {
+                value: null,
+                success: false
+            }
         }
         // NetInfo.isConnected.fetch().then(isConnected => {
         //     alert(isConnected);
@@ -50,7 +54,7 @@ class FormPage extends PureComponent {
     }
 
     validation = () => {
-        const { seria, nomer } = this.state;
+        const { seria, nomer, date } = this.state;
         if (!seria.success && seria.value.length === 2 && seria.value.replace(/[0-9]{2}/, '').length === 0) {
             this.setState({
                 seria: {
@@ -82,6 +86,20 @@ class FormPage extends PureComponent {
                 }
             });
         }
+
+        if (date.value) 
+            this.setState({
+                date: {
+                    ...date,
+                    success: true
+                }
+            });
+        else this.setState({
+            date: {
+                ...date,
+                success: false
+            }
+        });
     }
 
     changeSeria = (e) => {
@@ -112,7 +130,7 @@ class FormPage extends PureComponent {
         try {
           await AsyncStorage.setItem(label, value);
         } catch (error) {
-          console.log(error);
+          return;
         }
     };
 
@@ -147,7 +165,7 @@ class FormPage extends PureComponent {
     }
 
     render() {
-        const { seria, nomer, registrator } = this.state;
+        const { seria, nomer, registrator, date } = this.state;
         const { formLoading, user, navigation } = this.props;
 
         if (user) {
@@ -164,13 +182,31 @@ class FormPage extends PureComponent {
                     <Text style={{marginBottom: 20, textAlign: 'center', fontSize: 20}}>Авторизация</Text>
                     <Form style={{justifyContent: 'center', flex: 1}}>
                         <Item success={seria.success} style={{marginBottom: 10}}>
-                            <Input placeholder="Серия паспорта" value={seria.value} onChange={this.changeSeria} />
+                            <Input style={{ color: "#333", paddingLeft: 10 }} placeholder="Серия паспорта" value={seria.value} onChange={this.changeSeria} />
                             {
                                 seria.success ? <Icon name='checkmark-circle' /> : null
                             }
                         </Item>
                         <Item success={nomer.success}>
-                            <Input placeholder="Номер паспорта" value={nomer.value} onChange={this.changeNomer} />
+                            <Input style={{ color: "#333", paddingLeft: 10 }} placeholder="Номер паспорта" value={nomer.value} onChange={this.changeNomer} />
+                            {
+                                nomer.success ? <Icon name='checkmark-circle' /> : null
+                            }
+                        </Item>
+                        <Item style={{ paddingTop: 10 }} success={date.success}>
+                            <DatePicker
+                                defaultDate={date.value}
+                                locale={"ru"}
+                                timeZoneOffsetInMinutes={undefined}
+                                modalTransparent={false}
+                                animationType={"fade"}
+                                androidMode={"default"}
+                                placeHolderText="Дата выдачи"
+                                textStyle={{ color: "#333" }}
+                                placeHolderTextStyle={{ color: "#333" }}   
+                                onDateChange={this.setDate}
+                                disabled={false}
+                            />
                             {
                                 nomer.success ? <Icon name='checkmark-circle' /> : null
                             }

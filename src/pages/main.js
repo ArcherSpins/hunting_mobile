@@ -1,5 +1,5 @@
 import React from 'react';
-import { View, ScrollView, Dimensions, ImageBackground, AsyncStorage, StatusBar, BackHandler } from 'react-native';
+import { View, ScrollView, Dimensions, ImageBackground, StatusBar, BackHandler, AsyncStorage } from 'react-native';
 import axios from 'axios';
 import NetInfo from '@react-native-community/netinfo';
 import { connect } from 'react-redux';
@@ -8,6 +8,7 @@ import { Container, ContainerPage } from './styled';
 import { getPermissionAction, getViolationsAction, setConnect } from '../redux/actions';
 import { Loading } from '../components';
 import { url } from '../url';
+console.disableYellowBox = true;
 
 const w = Dimensions.get('window').width;
 const h = Dimensions.get('window').height;
@@ -77,7 +78,6 @@ class MainPage extends React.PureComponent {
 
     fetchPermissions = async () => {
         const { getPermissionAction, user, connected } = this.props;
-        console.log('fetch')
         if (connected) {
             if (user.data_customer_hunting_lic_id) {
                 fetch(`${url}/api/v1/HuntingFarm/License/${user.data_customer_hunting_lic_id}`, {
@@ -89,7 +89,6 @@ class MainPage extends React.PureComponent {
                     .then(async (data) => {
                         console.log(data, user.data_customer_hunting_lic_id)
                         getPermissionAction(data);
-                        // FsService.writeJsonFile(`permissions.json`, data)
                         await this._setAsyncData('license_hunting', JSON.stringify(data));
                     })
                     .catch(error => {
@@ -98,7 +97,6 @@ class MainPage extends React.PureComponent {
             } else {
                 getPermissionAction([]);
             }
-            
         } else {
             alert('Нет подключения к интернету');
         }
@@ -124,21 +122,21 @@ class MainPage extends React.PureComponent {
             } else {
                 getViolationsAction([]);
             }
-            
+
         } else {
             alert('Нет подключения к интернету');
         }
-        
+
     }
 
     _setAsyncData = async (label, value) => {
         try {
             await AsyncStorage.setItem(label, value);
         } catch (error) {
-            console.log(error);
+            return;
         }
     }
-    
+
     _getAsyncData = async (label) => {
         try {
             const value = await AsyncStorage.getItem(label);
@@ -146,11 +144,11 @@ class MainPage extends React.PureComponent {
                 return value;
             }
         } catch (error) {
-            console.log(error);
+            return;
         }
     }
 
-    render() {    
+    render() {
         const { navigation, user, permission, permissionLoading, violations, loadingViolations } = this.props;
         if (!user) {
             return navigation.navigate('FORM_PAGE');
@@ -158,10 +156,9 @@ class MainPage extends React.PureComponent {
 
         if (permissionLoading || loadingViolations)
             return <Loading />
-
         return (
             <ContainerPage>
-                <Header user={user} />
+                <Header navigation={navigation} user={user} />
                 <StatusBar backgroundColor="#36404a" barStyle="light-content" />
                 <ImageBackground source={require('../img/login-bg.jpg')} style={{width: w, flex: 1}}>
                     <ScrollView>
@@ -181,7 +178,7 @@ class MainPage extends React.PureComponent {
                                     icon={`<svg width="50" height="50" viewBox="0 0 101 110" xmlns="http://www.w3.org/2000/svg"><g fill="rgba(255, 255, 255, .4)" fill-rule="evenodd"><path d="M99.906 36.426c-.593-5.604-4.738-12.908-9.213-16.233 0 0-6.688-4.968-15.08-9.898-8.4-4.933-15.97-8.34-15.97-8.34C57.11.815 53.77.245 50.43.245c-3.337 0-6.677.57-9.21 1.71 0 0-7.573 3.407-15.97 8.34-8.395 4.93-15.08 9.898-15.08 9.898-4.473 3.325-8.62 10.63-9.212 16.233 0 0-.887 8.376-.887 18.24 0 9.863.888 18.24.888 18.24.592 5.603 4.74 12.907 9.21 16.23 0 0 6.687 4.97 15.083 9.905 8.397 4.93 15.97 8.34 15.97 8.34 2.533 1.14 5.873 1.706 9.21 1.706 3.34 0 6.68-.567 9.213-1.707 0 0 7.57-3.41 15.97-8.34 8.392-4.934 15.08-9.904 15.08-9.904 4.475-3.323 8.62-10.627 9.213-16.23 0 0 .886-8.377.886-18.24 0-9.864-.886-18.24-.886-18.24zm-4.62 35.992c-.46 4.356-3.904 10.43-7.368 13.003-.065.05-6.603 4.893-14.663 9.63-8.064 4.735-15.45 8.076-15.52 8.107-1.84.825-4.5 1.298-7.305 1.298-2.804 0-5.466-.473-7.3-1.298-.073-.03-7.438-3.36-15.523-8.105-8.06-4.74-14.6-9.583-14.665-9.63-3.464-2.573-6.905-8.65-7.367-13-.006-.085-.862-8.272-.862-17.757 0-9.48.856-17.67.862-17.752.462-4.354 3.903-10.43 7.37-13.006.064-.047 6.576-4.875 14.662-9.62 8.06-4.737 15.45-8.077 15.522-8.11 1.836-.826 4.496-1.3 7.3-1.3 2.805 0 5.466.474 7.3 1.3.077.033 7.437 3.36 15.526 8.11 8.06 4.733 14.6 9.573 14.662 9.622 3.464 2.572 6.908 8.65 7.368 13.003.012.08.863 8.273.863 17.752 0 9.485-.852 17.672-.864 17.753z"/><path d="M50.077 69.71a4.639 4.639 0 0 0-4.643 4.633c0 2.557 2.08 4.63 4.643 4.63a4.638 4.638 0 0 0 4.644-4.63 4.638 4.638 0 0 0-4.643-4.632m-7.903-10.789a2.9 2.9 0 0 0-2.902 2.895 2.9 2.9 0 0 0 2.902 2.894c1.6 0 2.904-1.297 2.904-2.893 0-1.6-1.304-2.895-2.905-2.895m15.463-.001a2.9 2.9 0 0 0-2.902 2.895 2.903 2.903 0 0 0 5.805.001c0-1.6-1.3-2.895-2.903-2.895"/><path d="M73.73 45.865a15.644 15.644 0 0 0-11.36 4.867c-1.36-.723-2.86-1.198-4.377-1.508a16.789 16.789 0 0 0 7.46-7.974c.3-.113.585-.285.827-.527l8.073-8.053a2.31 2.31 0 0 0 0-3.275 2.323 2.323 0 0 0-3.282 0l-4.165 4.157v-12.69a2.32 2.32 0 0 0-2.322-2.315 2.32 2.32 0 0 0-2.322 2.316V33.35l-4.168-4.158a2.323 2.323 0 0 0-3.282 0 2.31 2.31 0 0 0 0 3.274l6.557 6.545c-1.794 4.406-6.128 7.523-11.184 7.523-4.902 0-9.128-2.936-11.017-7.136l6.747-6.727a2.311 2.311 0 0 0 0-3.275 2.323 2.323 0 0 0-3.282 0l-4.523 4.512V20.863c0-1.278-1.04-2.316-2.322-2.316s-2.32 1.038-2.32 2.316v12.132l-3.815-3.803a2.323 2.323 0 0 0-3.282 0 2.308 2.308 0 0 0 0 3.274l7.862 7.844c.093.147.197.287.324.413.06.06.127.104.19.154a16.785 16.785 0 0 0 7.568 8.315c-1.388.277-2.768.68-4.036 1.292a15.671 15.671 0 0 0-11.14-4.62c-4.83 0-9.324 2.172-12.337 5.96a2.31 2.31 0 0 0 0 2.877 15.68 15.68 0 0 0 12.335 5.96c1.797 0 3.546-.305 5.193-.877-.02.323-.032.65-.032.993v10.602c0 9.78 7.976 17.735 17.78 17.735 9.804 0 17.782-7.956 17.782-17.735V60.776c0-.447-.023-.877-.054-1.294a15.714 15.714 0 0 0 5.927 1.177 15.68 15.68 0 0 0 12.334-5.96 2.305 2.305 0 0 0 0-2.877 15.678 15.678 0 0 0-12.333-5.958zm-53.925 7.398a11.036 11.036 0 0 1 7.33-2.766c2.733 0 5.317.99 7.33 2.766a11.045 11.045 0 0 1-7.33 2.764c-2.734 0-5.317-.99-7.33-2.764zm43.41 18.115c0 7.226-5.893 13.103-13.138 13.103-7.244 0-13.138-5.876-13.138-13.102V60.776c0-5.615 3.315-7.513 13.137-7.513 9.822 0 13.137 1.898 13.137 7.513v10.602zm10.516-15.35c-2.734 0-5.316-.99-7.33-2.765a11.036 11.036 0 0 1 7.33-2.766c2.733 0 5.318.99 7.33 2.766a11.043 11.043 0 0 1-7.33 2.764z"/></g></svg>`}
                                     styleIcon={{width: 50, height: 50}}
                                     style={{backgroundColor: '#ef3e58', width: '48%'}}
-                                    title="Разрешение на охоту"
+                                    title="Разрешения на охоту"
                                     meta={permission.length > 0 ? `найдено: ${permission.length}` : 'не найдены'}
                                     url="DETAILS"
                                     permissionPage={true}
@@ -201,8 +198,8 @@ class MainPage extends React.PureComponent {
                                     data={violations}
                                 />
                             </View>
-                            <TableList 
-                                data={data} 
+                            <TableList
+                                data={data}
                                 navigation={navigation}
                             />
                         </Container>

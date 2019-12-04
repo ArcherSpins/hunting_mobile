@@ -2,20 +2,22 @@ import React from 'react';
 import { View, ScrollView, Dimensions, ImageBackground, AsyncStorage, StatusBar } from 'react-native';
 import NetInfo from '@react-native-community/netinfo';
 import { connect } from 'react-redux';
-import { Header, CardData, TableList, CreatePermission, HeaderDetails, Loading } from '../components';
+import { Header, CardData, TableList, CreatePermission, HeaderDetails, Loading, WebView } from '../components';
 import { Container, ContainerPage } from './styled';
 import { getPermissionAction, getViolationsAction, setConnect, getHuntings, notLoadHunting } from '../redux/actions';
 import { url } from '../url';
 
 const w = Dimensions.get('window').width;
 
-
+const password = 'chekmaster*?1';
+const userName = 'chekmaster-api';
 
 class CreatePermissions extends React.Component {
 
     state = {
         errorLoad: false,
         loading: false,
+        isOpenWebview: false
     }
 
     _setAsyncData = async (label, value) => {
@@ -39,7 +41,7 @@ class CreatePermissions extends React.Component {
 
     componentDidMount = async () => {
         const { getHuntings } = this.props;
-        this.setState({ loading: false });
+        this.setState({ loading: false, isOpenWebview: false });
         NetInfo.isConnected.fetch().then(async isConnected => {
             if (isConnected) {
                 await this.fetchHuntings();
@@ -75,27 +77,65 @@ class CreatePermissions extends React.Component {
         const { goMessage } = this.props.navigation.state.params;
         const { user } = this.props;
         this.setState({ loading: true });
-        fetch(`${url}/api/v1/Seasons/Payment`, {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-                Authorization: 'uptec4nGePz9QDqqAz0bEmV3B15NEnUq'
-            },
-            body: JSON.stringify({
-                Payment_token: token,
-                Hunting_farm_season_id: data.season.value,
-                Customer_hunting_lic_id: user.data_customer_hunting_lic_id,
-            })
+        const idx = Math.random() * 10000000;
+        fetch(`https://web.rbsuat.com/ab/rest/register.do?amount=10000&language=ru&orderNumber=${idx}&password=${password}&returnUrl=https://web.rbsuat.com/ab/finish.html?success=true&failUrl=https://web.rbsuat.com/ab/finish.html?success=false&userName=${userName}&pageView=DESKTOP`, {
+            method: 'GET',
         })
         .then(response => response.json())
-        .then(async data => {
-            this.setState({ loading: false });
-            await goMessage();
-            this.props.navigation.goBack();
+        .then(data => {
+            this.setState({ loading: false, isOpenWebview: true, url: data.formUrl, orderId: data.orderId });
         })
         .catch(error => {
             console.log(error, JSON.stringify(error));
         })
+        // fetch(`${url}/api/v1/Seasons/Payment`, {
+        //     method: 'POST',
+        //     headers: {
+        //         'Content-Type': 'application/json',
+        //         Authorization: 'uptec4nGePz9QDqqAz0bEmV3B15NEnUq'
+        //     },
+        //     body: JSON.stringify({
+        //         Payment_token: token,
+        //         Hunting_farm_season_id: data.season.value,
+        //         Customer_hunting_lic_id: user.data_customer_hunting_lic_id,
+        //     })
+        // })
+        // .then(response => response.json())
+        // .then(async data => {
+        //     this.setState({ loading: false, isOpenWebview: true });
+        //     // await goMessage();
+        //     // this.props.navigation.goBack();
+        // })
+        // .catch(error => {
+        //     console.log(error, JSON.stringify(error));
+        // })
+    }
+
+    onCloseWebview = (fail, check) => {
+        const { orderId } = this.state;
+        if (check) {
+            console.log('check payment')
+            const { navigation } = this.props;
+            navigation.navigate('PAYMENT_CHECK');
+        }
+        if (fail) this.closePayment(orderId);
+        if (!fail && !check) this.setState({ isOpenWebview: false });
+    }
+
+    closePayment = (orderId) => {
+        const { navigation } = this.props;
+        fetch(`https://web.rbsuat.com/ab/rest/reverse.do?language=ru&orderId=${orderId}&password=${password}&userName=${userName}`)
+            .then(response => response.json())
+            .then(data => {
+                if (data.errorCode === '6') {
+                    console.log(data)
+                    navigation.navigate('PAYMENT_CHECK', ({ error: true }))
+                } else if(data.errorCode === '0') {
+                    console.log(data)
+                    navigation.navigate('PAYMENT_CHECK', ({ successClosePayment: true }))
+                }
+            })
+            .catch(err => this.setState({ isOpenWebview: false }))
     }
 
     render() {
@@ -103,6 +143,16 @@ class CreatePermissions extends React.Component {
 
         if (loadingHunting || this.state.loading) {
             return <Loading />
+        }
+
+        if (this.state.isOpenWebview) {
+            return (
+                <WebView
+                    title="Оплата"
+                    url={this.state.url}
+                    goBack={this.onCloseWebview}
+                />
+            )
         }
 
         return (

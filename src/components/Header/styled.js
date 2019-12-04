@@ -17,6 +17,7 @@ export const Logo = styled.View`
     align-items: center;
     flex-direction: row;
     padding-right: 10px;
+    max-width: 70%;
 `;
 
 export const Icon = styled.View`

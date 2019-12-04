@@ -2,7 +2,8 @@ import React from 'react';
 import { Modal, Text, Picker, View } from 'react-native';
 import styled from 'styled-components';
 import { Form, Item, Input, Button } from 'native-base';
-import YandexPayment from 'react-native-yandex-payment';
+// import YandexPayment from 'react-native-yandex-payment';
+import WebView from '../Webview';
 import { url } from '../../url';
 
 const Container = styled.View`
@@ -76,7 +77,8 @@ class CreatePermission extends React.Component {
                     Tariff: null,
                     Charge: null
                 }
-            }
+            },
+            isOpenWebview: false,
         }
 
         this.onChange = this.onChange.bind(this);
@@ -107,7 +109,7 @@ class CreatePermission extends React.Component {
                     }
                 });
                 break;
-            default: break;   
+            default: break;
         }
     }
 
@@ -120,7 +122,7 @@ class CreatePermission extends React.Component {
         })
         .then(response => response.json())
         .then((data) => {
-            this.setState({ 
+            this.setState({
                 season: {
                     ...this.state.season,
                     data,
@@ -142,7 +144,7 @@ class CreatePermission extends React.Component {
         .then(response => response.json())
         .then((data) => {
             console.log(data)
-            this.setState({ 
+            this.setState({
                 stamp_duty: {
                     data,
                 }
@@ -154,7 +156,7 @@ class CreatePermission extends React.Component {
     }
 
     changeInput = (idx, e) => {
-        this.setState({ 
+        this.setState({
             [idx]: {
                 value: e.nativeEvent.text,
             }
@@ -162,24 +164,7 @@ class CreatePermission extends React.Component {
     }
 
     getFormPay = async () => {
-        console.log(this.state.stamp_duty.data.Tariff);
-        const shop = {
-            id: '638856',
-            token: 'test_NjM4ODU2u5z7NQXBFK9i61pSvgl5uyLQGv9hthWRGe8',
-            name: 'ООО "ЭЛЕКТРОН-ИТ"',
-            description: 'Shop description',
-        };
-
-        const payment = {
-            amount: this.state.stamp_duty.data.Tariff,
-            currency: 'RUB', // 'RUB' | 'USD' | 'EUR'
-            types: ['BANK_CARD'], // 'YANDEX_MONEY' | 'BANK_CARD' | 'SBERBANK' | 'PAY'. PAY - means Google Pay or Apple Pay
-        };
-
-        const paymentToken = await YandexPayment.show(shop, payment);
-        console.log(paymentToken.token); // payment token
-        console.log(paymentToken); // payment method type
-        return paymentToken.token;
+        return 'wddewde';
     }
 
     onSubmit = async () => {
@@ -199,16 +184,19 @@ class CreatePermission extends React.Component {
                 status = false;
             }
         }
-
+        this.setState({ isOpenWebview: true });
         const token = await this.getFormPay();
 
-        onSubmit(this.state, token);
+        onSubmit(this.state, null);
+    }
+
+    onCloseWebview = () => {
+        this.setState({ isOpenWebview: false });
     }
 
     render() {
-
         const { huntings } = this.props;
-
+        console.log(this.state.season.data)
         return (
             <Container>
                 <ModalComp>
@@ -255,8 +243,8 @@ class CreatePermission extends React.Component {
                                     this.onChange('season', itemValue)
                                 }>
                                 {
-                                    [{ season_name: 'Не выбрано', season_id: null }, ...this.state.season.data].map(item => (
-                                        <Picker.Item key={item.animal_season_id} label={item.season_name} value={item.season_id} />
+                                    [{ season_name: 'Не выбрано', season_id: null }, ...this.state.season.data].map((item, i) => (
+                                        <Picker.Item key={item.animal_season_id || i } label={item.season_name} value={item.season_id} />
                                     ))
                                 }
                             </Picker>

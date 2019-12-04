@@ -1,5 +1,5 @@
 import React from 'react';
-import { ActivityIndicator, StyleSheet, View, StatusBar } from 'react-native';
+import { ActivityIndicator, StyleSheet, View, StatusBar, Image } from 'react-native';
 
 export default () => (
     <View style={styles.container}>

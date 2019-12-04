@@ -71,7 +71,8 @@ const PermissionDetailComponent = ({ navigation, listAnimals, setPermissionDetai
                             user.issue_body && (
                                 <ItemDetailsForHungry
                                     textStyle={{
-                                        width: '94%'
+                                        width: '98%',
+                                        float: 'left'
                                     }}
                                     item={{
                                         title: user.issue_body,

@@ -32,5 +32,9 @@ export * from './hunter_bilet';
 export * from './permission_hunter';
 export * from './responsibility';
 export * from './hunting_period';
+export * from './settingsPage';
 
+export { default as SettingSeriaNumber } from './settingSeriaNomer';
+export { default as SettingServer } from './settingServer';
+export { default as PaymentPageCheck } from './PaymentPage';
 export { default as CreatePermissions } from './createPermissions';

@@ -1,6 +1,6 @@
 import React from 'react';
 import styled from 'styled-components';
-import { View, AsyncStorage, StatusBar, ImageBackground } from 'react-native';
+import { View, AsyncStorage, StatusBar, ImageBackground, ActivityIndicator } from 'react-native';
 import { connect } from 'react-redux';
 import { authUserAction } from '../redux/actions';
 
@@ -22,7 +22,7 @@ class DefaultPageComponent extends React.Component {
         const { authUserAction, navigation } = this.props;
         try {
             const result = await this._getAsyncData('user');
-            if (result) {
+            if (!result) {
                 authUserAction(JSON.parse(result));
                 setTimeout(() => navigation.navigate('HOME'), 1000)
             } else {
@@ -51,7 +51,8 @@ class DefaultPageComponent extends React.Component {
             <ImageBackground source={require('../img/login-bg.jpg')} style={{flex: 1, alignItems: 'center', paddingTop: 100}}>
                 <View style={{ alignItems: 'center' }}>
                     <Title>МИНИСТЕРСТВО ПРИРОДНЫХ РЕСУРСОВ И ЭКОЛОГИИ РЕСПУБЛИКИ ДАГЕСТАН</Title>
-                    <Image source={require('../../assets/loading.gif')} />
+                    <ActivityIndicator style={{ marginTop: 20 }} size="large" color="#0000ff" />
+                    {/* <Image source={require('../../assets/loading.gif')} /> */}
                 </View>
             </ImageBackground>
         );

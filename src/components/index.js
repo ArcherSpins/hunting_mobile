@@ -10,7 +10,7 @@ export {
 
 export * from './Header';
 export * from './Card';
-export * from './Table'; 
+export * from './Table';
 export * from './HeaderDetails';
 export * from './List';
 export * from './Footer';
@@ -20,5 +20,6 @@ export * from './NotFound';
 export * from './LoadingUploading';
 export * from './Forms/FormCreatePermissions';
 
+export { default as WebView } from './Webview';
 
 export { default as AlertMessage } from './AlertMessage';

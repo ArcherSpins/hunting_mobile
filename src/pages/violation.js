@@ -64,7 +64,6 @@ const ViolationPage = React.memo(({ navigation }) => {
                         :
                         <NotFoundText />
                     }
-                    
                 </Content>
             </ImageBackground>
             <FooterTabs navigation={navigation} />

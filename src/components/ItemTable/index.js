@@ -87,7 +87,7 @@ export const ItemDetailsForHungry = (props) => {
     return (
         <ListItem onPress={() => item.path ? navigation.navigate(item.path, ({...props})) : console.log('not path')} style={[{borderBottomWidth: item.last || last ? 0 : 1}, style]}>
             <Left style={{width: '85%', minWidth:'85%'}}>
-                <Div style={{paddingRight: 60}}>
+                <Div style={{paddingRight: 10}}>
                 {
                     item.subtitle ? <Subtitle  numberOfLines={1}>{ item.subtitle }</Subtitle>
                     : null

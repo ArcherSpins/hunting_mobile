@@ -63,7 +63,6 @@ export class UserComponent extends React.PureComponent {
                    }}
                />
                <ItemDetailsForHungry
-                    textStyle={{paddingRight: 20}}
                    item={{
                        subtitle: 'Кем выдан',
                        name: user.issue_body,

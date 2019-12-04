@@ -16,7 +16,7 @@ import {
   DetailMap,
   AnimalDetailPage,
   FormPage,
-  ViolationDetail, 
+  ViolationDetail,
   PermissionDetail,
   UploadPage,
   RegulationHunt,
@@ -25,7 +25,11 @@ import {
   Responsibility,
   HuntingPeriod,
   CreatePermissions,
-  DefaultPage
+  DefaultPage,
+  PaymentPageCheck,
+  SettingServer,
+  SettingSeriaNumber,
+  SettignsPage
 } from './src/pages';
 import { Loading } from './src/components';
 import reducer from './src/redux/reducers';
@@ -38,14 +42,32 @@ const AppNavigator = createAppContainer(createStackNavigator(
           header: null,
         },
       },
+      SETTING_PASSPORT: {
+        screen: SettingSeriaNumber,
+        navigationOptions: {
+          header: null,
+        },
+      },
       FORM_PAGE: {
         screen: FormPage,
         navigationOptions: {
           header: null,
         },
       },
+      SETTING_SERVER: {
+        screen: SettingServer,
+        navigationOptions: {
+          header: null,
+        },
+      },
       HOME: {
         screen: MainPage,
+        navigationOptions: {
+            header: null,
+        },
+      },
+      PAYMENT_CHECK: {
+        screen: PaymentPageCheck,
         navigationOptions: {
             header: null,
         },
@@ -136,6 +158,12 @@ const AppNavigator = createAppContainer(createStackNavigator(
       },
       RESPONSIBILITY: {
         screen: Responsibility,
+        navigationOptions: {
+          header: null,
+        },
+      },
+      SETTINGS: {
+        screen: SettignsPage,
         navigationOptions: {
           header: null,
         },
