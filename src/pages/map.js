@@ -1,6 +1,7 @@
 import React from 'react';
 import MapView, { Marker } from 'react-native-maps';
 import { Image, StatusBar, AsyncStorage } from 'react-native';
+import { Toast } from 'native-base';
 import NetInfo from '@react-native-community/netinfo';
 import { connect } from 'react-redux';
 import { HeaderDetails, FooterTabs, Loading, ErrorBoundry } from '../components';
@@ -53,12 +54,24 @@ class MapPage extends React.Component {
                                 await this._setAsyncData(`map_${item.id}`, JSON.stringify(data));
                             } catch(err) {
                                 this.setState({ error: true });
+                                
+                                Toast.show({
+                                    text: err,
+                                    type: 'danger'
+                                });
                             }
                         })
-                        .catch(err => console.log(err));
+                        .catch(err => 
+                            Toast.show({
+                                text: err,
+                                type: 'danger'
+                            }));
                 } else {
                     const map = await this._getAsyncData(`map_${item.id}`);
-                    map ? setHuntingCoordinat(JSON.parse(map)) : alert('Нет интернета');
+                    map ? setHuntingCoordinat(JSON.parse(map)) : Toast.show({
+                        text: 'Ошибка подключения',
+                        type: 'danger'
+                    });
                 }
             });
             

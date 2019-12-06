@@ -64,7 +64,6 @@ const Status = styled.Text`
 `;
 
 export const ItemTable = ({icon, iconXml, title, content, last, navigation, url}) => {
-    console.log(icon)
     return (
         <TouchableOpacity onPress={() => navigation.navigate(url, ({title}))} activeOpacity={0.8}>
             <Item>

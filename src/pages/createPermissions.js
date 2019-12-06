@@ -1,6 +1,7 @@
 import React from 'react';
 import { View, ScrollView, Dimensions, ImageBackground, AsyncStorage, StatusBar } from 'react-native';
 import NetInfo from '@react-native-community/netinfo';
+import { Toast } from 'native-base';
 import { connect } from 'react-redux';
 import { Header, CardData, TableList, CreatePermission, HeaderDetails, Loading, WebView } from '../components';
 import { Container, ContainerPage } from './styled';
@@ -69,7 +70,10 @@ class CreatePermissions extends React.Component {
             await this._setAsyncData('huntings', JSON.stringify(data));
         })
         .catch(error => {
-            console.log(error);
+            Toast.show({
+                text: error,
+                type: 'danger'
+            })
         })
     }
 
@@ -77,17 +81,23 @@ class CreatePermissions extends React.Component {
         const { goMessage } = this.props.navigation.state.params;
         const { user } = this.props;
         this.setState({ loading: true });
-        const idx = Math.random() * 10000000;
-        fetch(`https://web.rbsuat.com/ab/rest/register.do?amount=10000&language=ru&orderNumber=${idx}&password=${password}&returnUrl=https://web.rbsuat.com/ab/finish.html?success=true&failUrl=https://web.rbsuat.com/ab/finish.html?success=false&userName=${userName}&pageView=DESKTOP`, {
-            method: 'GET',
-        })
-        .then(response => response.json())
-        .then(data => {
-            this.setState({ loading: false, isOpenWebview: true, url: data.formUrl, orderId: data.orderId });
-        })
-        .catch(error => {
-            console.log(error, JSON.stringify(error));
-        })
+        // const idx = Math.random() * 10000000;
+        console.log(data)
+        this.setState({ loading: false, isOpenWebview: true, url: data.FormUrl, orderId: data.OrderId });
+
+        // fetch(`https://web.rbsuat.com/ab/rest/register.do?amount=10000&language=ru&orderNumber=${idx}&password=${password}&returnUrl=https://web.rbsuat.com/ab/finish.html?success=true&failUrl=https://web.rbsuat.com/ab/finish.html?success=false&userName=${userName}&pageView=DESKTOP`, {
+        //     method: 'GET',
+        // })
+        // .then(response => response.json())
+        // .then(data => {
+        //     this.setState({ loading: false, isOpenWebview: true, url: data.formUrl, orderId: data.orderId });
+        // })
+        // .catch(error => {
+        //     Toast.show({
+        //         text: error,
+        //         type: 'danger'
+        //     })
+        // })
         // fetch(`${url}/api/v1/Seasons/Payment`, {
         //     method: 'POST',
         //     headers: {
@@ -127,13 +137,14 @@ class CreatePermissions extends React.Component {
         fetch(`https://web.rbsuat.com/ab/rest/reverse.do?language=ru&orderId=${orderId}&password=${password}&userName=${userName}`)
             .then(response => response.json())
             .then(data => {
-                if (data.errorCode === '6') {
-                    console.log(data)
-                    navigation.navigate('PAYMENT_CHECK', ({ error: true }))
-                } else if(data.errorCode === '0') {
-                    console.log(data)
-                    navigation.navigate('PAYMENT_CHECK', ({ successClosePayment: true }))
-                }
+                console.log(data)
+                // if (data.errorCode === '6') {
+                //     console.log(data)
+                //     navigation.navigate('PAYMENT_CHECK', ({ error: true }))
+                // } else if(data.errorCode === '0') {
+                //     console.log(data)
+                //     navigation.navigate('PAYMENT_CHECK', ({ successClosePayment: true }))
+                // }
             })
             .catch(err => this.setState({ isOpenWebview: false }))
     }
@@ -144,6 +155,7 @@ class CreatePermissions extends React.Component {
         if (loadingHunting || this.state.loading) {
             return <Loading />
         }
+
 
         if (this.state.isOpenWebview) {
             return (
@@ -161,7 +173,7 @@ class CreatePermissions extends React.Component {
                 <StatusBar backgroundColor="#36404a" barStyle="light-content" />
                 <ImageBackground source={require('../img/login-bg.jpg')} style={{width: w, flex: 1}}>
                     <ScrollView>
-                        <CreatePermission onSubmit={this.onSubmit} huntings={huntings} />
+                        <CreatePermission user={user} onSubmit={this.onSubmit} huntings={huntings} />
                     </ScrollView>
                 </ImageBackground>
             </ContainerPage>

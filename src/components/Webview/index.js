@@ -25,12 +25,12 @@ export default ({ goBack, title, url }) => (
             renderLoading={() => <p style={{ flex: 1 }}>Loading..</p>}
             onShouldStartLoadWithRequest={request => {
                 console.log(request)
-                if (request.url.match(/success=.+?&/)[0].replace('&', '').replace('success=', '') === 'false') {
-                    goBack();
-                    return false;
-                }
+                // if (request.url.match(/success=.+?&/)[0].replace('&', '').replace('success=', '') === 'false') {
+                //     goBack();
+                //     return false;
+                // }
 
-                goBack(true);
+                // goBack(true);
 
                 return true;
             }}

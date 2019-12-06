@@ -3,6 +3,7 @@ import { View, ScrollView, Dimensions, ImageBackground, StatusBar, BackHandler, 
 import axios from 'axios';
 import NetInfo from '@react-native-community/netinfo';
 import { connect } from 'react-redux';
+import { Toast } from 'native-base';
 import { Header, CardData, TableList } from '../components';
 import { Container, ContainerPage } from './styled';
 import { getPermissionAction, getViolationsAction, setConnect } from '../redux/actions';
@@ -87,18 +88,25 @@ class MainPage extends React.PureComponent {
                 })
                     .then(response => response.json())
                     .then(async (data) => {
-                        console.log(data, user.data_customer_hunting_lic_id)
                         getPermissionAction(data);
                         await this._setAsyncData('license_hunting', JSON.stringify(data));
                     })
                     .catch(error => {
-                        console.log(error);
+                        Toast.show({
+                            text: 'Ошибка подключения',
+                            buttonText: 'x',
+                            type: 'danger'
+                        });
                     });
             } else {
                 getPermissionAction([]);
             }
         } else {
-            alert('Нет подключения к интернету');
+            Toast.show({
+                text: 'Ошибка подключения',
+                buttonText: 'x',
+                type: 'danger'
+            });
         }
     }
 
@@ -117,14 +125,22 @@ class MainPage extends React.PureComponent {
                         await this._setAsyncData('violations_customer', JSON.stringify(data));
                     })
                     .catch(error => {
-                        console.log('main', error);
+                        Toast.show({
+                            text: error,
+                            buttonText: 'x',
+                            type: 'danger'
+                        });
                     });
             } else {
                 getViolationsAction([]);
             }
 
         } else {
-            alert('Нет подключения к интернету');
+            Toast.show({
+                text: 'Ошибка подключения',
+                position: 'top',
+                type: 'danger'
+            });
         }
 
     }
@@ -150,12 +166,13 @@ class MainPage extends React.PureComponent {
 
     render() {
         const { navigation, user, permission, permissionLoading, violations, loadingViolations } = this.props;
-        if (!user) {
+        if (!user || (user && !user.data_customer_id)) {
             return navigation.navigate('FORM_PAGE');
         }
 
         if (permissionLoading || loadingViolations)
             return <Loading />
+
         return (
             <ContainerPage>
                 <Header navigation={navigation} user={user} />

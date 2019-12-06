@@ -22,7 +22,8 @@ class DefaultPageComponent extends React.Component {
         const { authUserAction, navigation } = this.props;
         try {
             const result = await this._getAsyncData('user');
-            if (!result) {
+            console.log(result)
+            if (result) {
                 authUserAction(JSON.parse(result));
                 setTimeout(() => navigation.navigate('HOME'), 1000)
             } else {

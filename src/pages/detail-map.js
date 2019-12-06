@@ -1,6 +1,7 @@
 import React from 'react';
 import { ImageBackground, Dimensions, StatusBar } from 'react-native';
 import { connect } from 'react-redux';
+import { Toast } from 'native-base';
 import { HeaderDetails, FooterTabs, Loading, ItemDetailsForHungry } from '../components';
 import { ContainerPage, Content, CardMapDetail, CardText } from './styled';
 import { setDealHuntingDataAction } from '../redux/actions';
@@ -23,7 +24,10 @@ class DetailMap extends React.Component {
         .then(response => response.json())
         .then(data => setDealHuntingDataAction(data))
         .catch(error => {
-            console.log(error);
+            Toast.show({
+                text: error,
+                type: 'danger'
+            })
         })
     }
 

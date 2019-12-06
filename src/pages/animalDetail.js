@@ -1,5 +1,6 @@
 import React from 'react';
 import { ImageBackground, Dimensions, StyleSheet, AsyncStorage, StatusBar } from 'react-native';
+import { Toast } from 'native-base';
 import { connect } from 'react-redux';
 import { HeaderDetails, FooterTabs, Loading, ItemDetailsForHungry } from '../components';
 import { ContainerPage, Content, CardMapDetail, Text, BgImage, Div, CardContent, FoneBlock } from './styled';
@@ -15,7 +16,6 @@ class AnimalDetailPage extends React.Component {
         const { item } = this.props.navigation.state.params;
         const { setActiveAnimal } = this.props;
         const animal = await this._getAsyncData(`animal_${item.id || item.animal_id}`);
-        console.log(animal)
         animal ? setActiveAnimal(JSON.parse(animal)) : await this.fetchAnimal();
     }
 
@@ -35,7 +35,10 @@ class AnimalDetailPage extends React.Component {
             await this._setAsyncData(`animal_${item.id || item.animal_id}`, JSON.stringify(data));
         })
         .catch(error => {
-            console.log('catch loaded: ' + error);
+            Toast.show({
+                text: error,
+                type: 'danger'
+            })
         });
     }
 

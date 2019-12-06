@@ -1,6 +1,7 @@
 import React from 'react';
 import { View, StatusBar } from 'react-native';
 import { createAppContainer } from 'react-navigation';
+import { Root } from "native-base";
 import { createStackNavigator } from 'react-navigation-stack';
 import { Provider } from 'react-redux';
 import { createStore, applyMiddleware } from 'redux';
@@ -192,7 +193,9 @@ export default class App extends React.Component {
     return(
       <Provider store={store}>
         <View style={{flex: 1}}>
-          <AppNavigator />
+          <Root>
+            <AppNavigator />
+          </Root>
         </View>
       </Provider>
     );

@@ -1,7 +1,8 @@
 import React, { PureComponent } from 'react';
-import { Container, Header, Content, Form, Item, Input, Button, Icon, Text, AsyncStorage, DatePicker } from 'native-base';
-import { View, StatusBar, BackHandler } from 'react-native';
+import { Container, Header, Content, Form, Item, Input, Button, Icon, Text, DatePicker, Toast } from 'native-base';
+import { View, StatusBar, BackHandler, AsyncStorage } from 'react-native';
 import axios from 'axios';
+import { format } from 'date-fns';
 import NetInfo from '@react-native-community/netinfo';
 import { connect } from 'react-redux';
 import { Loading } from '../components';
@@ -87,14 +88,14 @@ class FormPage extends PureComponent {
             });
         }
 
-        if (date.value) 
+        if (!date.success && date.value) 
             this.setState({
                 date: {
                     ...date,
                     success: true
                 }
             });
-        else this.setState({
+        else if (date.success && !date.value) this.setState({
             date: {
                 ...date,
                 success: false
@@ -126,6 +127,8 @@ class FormPage extends PureComponent {
         }
     }
 
+    setDate = (d) => this.setState({ date: { ...this.state.date, value: d } });
+
     _storeData = async (label, value) => {
         try {
           await AsyncStorage.setItem(label, value);
@@ -135,40 +138,74 @@ class FormPage extends PureComponent {
     };
 
     submitFormAuth = () => {
-        const { seria, nomer } = this.state;
+        const { seria, nomer, date } = this.state;
         const { navigation, authUserAction } = this.props;
 
-        NetInfo.isConnected.fetch().then(isConnected => {
-            if (isConnected) {
-                try {
-                    fetch(`${url}/api/v1/Customer/${seria.value}/${nomer.value}`, {
-                        headers: {
-                            Authorization: 'uptec4nGePz9QDqqAz0bEmV3B15NEnUq'
-                        }
-                    })
-                        .then(response => response.json())
-                        .then(async data => {
-                            console.log(data, `${url}/api/v1/Customer/${seria.value}/${nomer.value}`)
-                            authUserAction({nomer, seria, ...data});
-                            await this._storeData('user', JSON.stringify(data));
-                            navigation.navigate('HOME');
-                            return data;
+        if (seria.success && nomer.success && date.success)
+            NetInfo.isConnected.fetch().then(isConnected => {
+                if (isConnected) {
+                    try {
+                        fetch(`${url}/api/v1/Customer?docserial=${seria.value}&docnumber=${nomer.value}&issuedate=${format(date.value, 'dd.MM.yyyy')}`, {
+                            headers: {
+                                Authorization: 'uptec4nGePz9QDqqAz0bEmV3B15NEnUq'
+                            }
                         })
-                        .catch(err => console.log(`${url}/api/v1/Customer/${seria.value}/${nomer.value}`, err));
-                } catch(err) {
-                    console.log(err)
+                            .then(response => response.json())
+                            .then(async data => {
+                                if (data.Message && data.Message === 'Произошла ошибка.') {
+                                    return Toast.show({
+                                        text: 'Произошла ошибка на сервере',
+                                        buttonText: 'x',
+                                        type: 'danger'
+                                    });
+                                }
+                                if (data.data_customer_id) {
+                                    authUserAction({nomer, seria, ...data});
+                                    console.log(data, 'set local')
+                                    await this._storeData('user', JSON.stringify(data));
+                                    navigation.navigate('HOME');
+                                    return data;
+                                }
+                                Toast.show({
+                                    text: 'Не найдено данных',
+                                    buttonText: 'x',
+                                    type: 'danger'
+                                });
+                            })
+                            .catch(err => Toast.show({
+                                text: err,
+                                buttonText: 'x',
+                                type: 'danger'
+                            }));
+                    } catch(err) {
+                        return Toast.show({
+                            text: err,
+                            buttonText: 'x',
+                            type: 'danger'
+                        });
+                    }
+                } else {
+                    Toast.show({
+                        text: 'Ошибка подключения',
+                        buttonText: 'x',
+                        type: 'danger'
+                    });
                 }
-            } else {
-                alert('нет подключения к интернету');
-            }
-        });
+            });
+        else {
+            Toast.show({
+                text: 'Пустые поля!',
+                buttonText: 'x',
+                type: 'danger'
+            });
+        }
     }
 
     render() {
         const { seria, nomer, registrator, date } = this.state;
         const { formLoading, user, navigation } = this.props;
 
-        if (user) {
+        if (user && user.data_customer_id) {
             navigation.navigate('HOME');
         }
 
@@ -193,14 +230,15 @@ class FormPage extends PureComponent {
                                 nomer.success ? <Icon name='checkmark-circle' /> : null
                             }
                         </Item>
-                        <Item style={{ paddingTop: 10 }} success={date.success}>
+                        <Item style={{ paddingTop: 10, paddingBottom: 5, justifyContent: 'space-between' }} success={date.success}>
                             <DatePicker
                                 defaultDate={date.value}
                                 locale={"ru"}
+                                formatChosenDate={date => format(date, 'dd.MM.yyyy')}
                                 timeZoneOffsetInMinutes={undefined}
                                 modalTransparent={false}
-                                animationType={"fade"}
-                                androidMode={"default"}
+                                animationType={"slide"}
+                                androidMode={"calendar"}
                                 placeHolderText="Дата выдачи"
                                 textStyle={{ color: "#333" }}
                                 placeHolderTextStyle={{ color: "#333" }}   
@@ -208,13 +246,13 @@ class FormPage extends PureComponent {
                                 disabled={false}
                             />
                             {
-                                nomer.success ? <Icon name='checkmark-circle' /> : null
+                                date.success ? <Icon name='checkmark-circle' /> : null
                             }
                         </Item>
                         <View style={{flexDirection: 'row', justifyContent: 'flex-end', marginTop: 20, marginRight: 20}}>
                             <Button
-                                disabled={(!nomer.success || !seria.success)}
-                                primary={(nomer.success && seria.success)}
+                                disabled={(!nomer.success || !seria.success || !date.success)}
+                                primary={(nomer.success && seria.success && date.success)}
                                 onPress={this.submitFormAuth}
                             ><Text> Войти </Text></Button>
                         </View>

@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from 'react';
+import { Toast } from 'native-base';
 import { ImageBackground, Dimensions, StyleSheet, AsyncStorage, StatusBar } from 'react-native';
 import { connect } from 'react-redux';
 import styled from 'styled-components';
@@ -34,7 +35,10 @@ const ViolationDetailComponent = ({ navigation, connected }) => {
                 .catch(err => console.log(err));
         } else {
             const violation = await _getAsyncData(`violation_data_${data.data_customer_violations_id}`);
-            violation ? setViolation(JSON.parse(violation)) : alert('Нет интернета');
+            violation ? setViolation(JSON.parse(violation)) : Toast.show({
+                text: 'Ошибка подключения',
+                type: 'danger'
+            });
         }
     }, [data]);
 

@@ -1,6 +1,7 @@
 import React, { useEffect } from 'react';
 import { StatusBar } from 'react-native';
 import { Dimensions, ImageBackground, Text, View } from 'react-native';
+import { Toast } from 'native-base';
 import { connect } from 'react-redux';
 import {
     HeaderDetails,
@@ -30,13 +31,15 @@ const PermissionDetailComponent = ({ navigation, listAnimals, setPermissionDetai
         fetch(`${url}/api/v1/HuntingFarm/License/${item.data_customer_hunting_lic_perm_id}/Animal`)
             .then(response => response.json())
             .then(data => setPermissionDetailAnimals(data))
-            .catch(error => console.log(error));
+            .catch(error => 
+            Toast.show({
+                text: 'Ошибка подключения',
+                type: 'danger'
+            }));
     }, []);
 
     if (loading)
         return <Loading />;
-
-        console.log(item)
 
     return (
         <ContainerPage>

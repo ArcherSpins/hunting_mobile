@@ -1,5 +1,6 @@
 import React from 'react';
 import { ImageBackground, Dimensions, AsyncStorage, StatusBar } from 'react-native';
+import { Toast } from 'native-base';
 import { connect } from 'react-redux';
 import { HeaderDetails, FooterTabs, Loading, ItemDetailsForHungry } from '../components';
 import { ContainerPage, Content, Div, Text } from './styled';
@@ -42,7 +43,10 @@ class AnimalPage extends React.Component {
                 await this._setAsyncData('animals', JSON.stringify(data));
             })
             .catch(error => {
-                console.log(error);
+                Toast.show({
+                    text: error,
+                    type: 'danger'
+                })
             });
     }
 

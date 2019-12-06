@@ -1,6 +1,6 @@
 import React from 'react';
 import { ImageBackground, Dimensions, AsyncStorage } from 'react-native';
-import { Button, Text } from 'native-base';
+import { Button, Text, Toast } from 'native-base';
 import { connect } from 'react-redux';
 import {
     HeaderDetails,
@@ -81,7 +81,6 @@ class UploadPage extends React.PureComponent {
     getDefaultHuntingFarmLocation = async () => {
         const { getDefaultHuntingFarmLocation } = this.props;
         const location = await this._getAsyncData('default_huntings_farm_location_data');
-        console.log(location)
         location ? getDefaultHuntingFarmLocation(JSON.parse(location), 'SET_DEFAULT_HUNTING_FARM_LOCATION') : getDefaultHuntingFarmLocation([], 'SET_DEFAULT_HUNTING_FARM_LOCATION')
     }
 
@@ -200,7 +199,10 @@ class UploadPage extends React.PureComponent {
             return <Loading />;
         
         if (errorAnimalsDefault.errorLoaded)
-            alert(errorAnimalsDefault.message);
+            Toast.show({
+                text: errorAnimalsDefault.message,
+                type: 'danger'
+            })
 
         return (
             <ContainerPage>

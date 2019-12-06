@@ -164,7 +164,15 @@ class CreatePermission extends React.Component {
     }
 
     getFormPay = async () => {
-        return 'wddewde';
+        const { user } = this.props;
+        const { season } = this.state;
+        console.log(user, season)
+        const response = await fetch(`${url}/api/v1/Payment/paymentPage?huntingFarmSeasonId=${season.value}&customerLicId=${user.data_customer_hunting_lic_id}`, {
+            method: 'post'
+        });
+        const data = await response.json();
+        console.log(data)
+        return data.Success;
     }
 
     onSubmit = async () => {
@@ -184,10 +192,12 @@ class CreatePermission extends React.Component {
                 status = false;
             }
         }
-        this.setState({ isOpenWebview: true });
-        const token = await this.getFormPay();
-
-        onSubmit(this.state, null);
+        const data = await this.getFormPay();
+        if (data) {
+            this.setState({ isOpenWebview: true, FormUrl: data.FormUrl });
+            onSubmit(data, null);
+        }
+        
     }
 
     onCloseWebview = () => {
@@ -196,7 +206,7 @@ class CreatePermission extends React.Component {
 
     render() {
         const { huntings } = this.props;
-        console.log(this.state.season.data)
+        
         return (
             <Container>
                 <ModalComp>
@@ -259,7 +269,7 @@ class CreatePermission extends React.Component {
                                     borderWidth: 1,
                                     borderRadius: 4
                                 }}>
-                                    <Text style={{height: 40, padding: 10, boxSizing: 'border-box'}}>{this.state.stamp_duty.data.Tariff}</Text>
+                                    <Text style={{height: 40, padding: 10}}>{this.state.stamp_duty.data.Tariff}</Text>
                                 </View>
                             </FieldBlock>
                         ) : null
@@ -273,12 +283,19 @@ class CreatePermission extends React.Component {
                                     borderWidth: 1,
                                     borderRadius: 4,
                                 }}>
-                                    <Text style={{height: 40, padding: 10, boxSizing: 'border-box'}}>{this.state.stamp_duty.data.Charge}</Text>
+                                    <Text style={{height: 40, padding: 10}}>{this.state.stamp_duty.data.Charge}</Text>
                                 </View>
                             </FieldBlock>
                         ) : null
                     }
-                    <Button style={{ marginTop: 25 }} onPress={this.onSubmit} primary><Text style={{textAlign: 'center', width: '100%', color: '#fff'}}> Создать </Text></Button>
+                    <Button
+                        disabled={!this.state.hunting_grounds.selected || !this.state.season.selected}
+                        style={{ marginTop: 25 }}
+                        onPress={this.onSubmit}
+                        primary={this.state.hunting_grounds.selected && this.state.season.selected}
+                    >
+                        <Text style={{textAlign: 'center', width: '100%', color: '#fff'}}> Создать </Text>
+                    </Button>
                 </ModalComp>
             </Container>
         );

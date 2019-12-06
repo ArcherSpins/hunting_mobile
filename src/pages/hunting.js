@@ -1,5 +1,6 @@
 import React from 'react';
 import { ImageBackground, Dimensions, AsyncStorage, StatusBar } from 'react-native';
+import { Toast } from 'native-base';
 import NetInfo from '@react-native-community/netinfo';
 import { connect } from 'react-redux';
 import { 
@@ -49,12 +50,14 @@ class HuntingPage extends React.PureComponent {
         })
         .then(response => response.json())
         .then(async (data) => {
-            console.log(data);
             getHuntings(data);
             await this._setAsyncData('huntings', JSON.stringify(data));
         })
         .catch(error => {
-            console.log(error);
+            Toast.show({
+                text: error,
+                type: 'danger'
+            })
         })
     }
 
@@ -92,7 +95,7 @@ class HuntingPage extends React.PureComponent {
 
         if (loadingHunting)
             return <Loading />
-        console.log(huntings)
+
         return(
             <ContainerPage>
                 <HeaderDetails searchIcon onGoBack={() => navigation.goBack()} title={title || 'Охотничьи ресурсы'} />
