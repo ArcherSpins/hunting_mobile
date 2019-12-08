@@ -164,7 +164,7 @@ class UploadPage extends React.PureComponent {
         try {
             await AsyncStorage.setItem(label, value);
         } catch (error) {
-            console.log(error);
+            return
         }
     }
     
@@ -175,7 +175,7 @@ class UploadPage extends React.PureComponent {
                 return value;
             }
         } catch (error) {
-            console.log(error);
+            return {}
         }
     }
 

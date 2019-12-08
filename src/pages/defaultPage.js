@@ -1,6 +1,7 @@
 import React from 'react';
 import styled from 'styled-components';
 import { View, AsyncStorage, StatusBar, ImageBackground, ActivityIndicator } from 'react-native';
+import { Toast } from 'native-base'
 import { connect } from 'react-redux';
 import { authUserAction } from '../redux/actions';
 
@@ -22,7 +23,6 @@ class DefaultPageComponent extends React.Component {
         const { authUserAction, navigation } = this.props;
         try {
             const result = await this._getAsyncData('user');
-            console.log(result)
             if (result) {
                 authUserAction(JSON.parse(result));
                 setTimeout(() => navigation.navigate('HOME'), 1000)
@@ -30,7 +30,10 @@ class DefaultPageComponent extends React.Component {
                 navigation.navigate('FORM_PAGE');
             }
         } catch(err) {
-            console.log(err)
+            Toast.show({
+                text: err,
+                type: 'danger'
+            })
         } finally {
             stopLoadingFormAction();
         }
@@ -43,7 +46,10 @@ class DefaultPageComponent extends React.Component {
                 return value;
             }
         } catch (error) {
-            console.log(error);
+            Toast.show({
+                text: error,
+                type: 'danger'
+            })
         }
     }
 

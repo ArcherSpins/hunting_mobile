@@ -25,7 +25,7 @@ class CreatePermissions extends React.Component {
         try {
             await AsyncStorage.setItem(label, value);
         } catch (error) {
-            console.log(error);
+            return {}
         }
     }
 
@@ -36,7 +36,7 @@ class CreatePermissions extends React.Component {
                 return value;
             }
         } catch (error) {
-            console.log(error);
+            return {}
         }
     }
 
@@ -46,7 +46,6 @@ class CreatePermissions extends React.Component {
         NetInfo.isConnected.fetch().then(async isConnected => {
             if (isConnected) {
                 await this.fetchHuntings();
-                console.log('fetch data');
                 return false;
             } else {
                 const huntings = await this._getAsyncData('huntings');
@@ -124,7 +123,6 @@ class CreatePermissions extends React.Component {
     onCloseWebview = (fail, check) => {
         const { orderId } = this.state;
         if (check) {
-            console.log('check payment')
             const { navigation } = this.props;
             navigation.navigate('PAYMENT_CHECK');
         }
@@ -137,7 +135,6 @@ class CreatePermissions extends React.Component {
         fetch(`https://web.rbsuat.com/ab/rest/reverse.do?language=ru&orderId=${orderId}&password=${password}&userName=${userName}`)
             .then(response => response.json())
             .then(data => {
-                console.log(data)
                 // if (data.errorCode === '6') {
                 //     console.log(data)
                 //     navigation.navigate('PAYMENT_CHECK', ({ error: true }))

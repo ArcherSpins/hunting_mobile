@@ -214,7 +214,6 @@ export default (state = initialState, action) => {
                 loading_default_hunting_farm_location: false,
             }
         case 'SET_DEFAULT_HUNTING_FARM_LOCATION':
-            console.log(action.payload)
             return {
                 ...state,
                 hunting_farm_location: action.payload,

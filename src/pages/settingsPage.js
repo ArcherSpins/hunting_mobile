@@ -13,36 +13,6 @@ import { url } from '../url';
 
 export class SettignsPage extends React.Component {
 
-    submitFormAuth = () => {
-        // const { seria, nomer } = this.state;
-        // const { navigation, authUserAction } = this.props;
-
-        // NetInfo.isConnected.fetch().then(isConnected => {
-        //     if (isConnected) {
-        //         try {
-        //             fetch(`${url}/api/v1/Customer/${seria.value}/${nomer.value}`, {
-        //                 headers: {
-        //                     Authorization: 'uptec4nGePz9QDqqAz0bEmV3B15NEnUq'
-        //                 }
-        //             })
-        //                 .then(response => response.json())
-        //                 .then(async data => {
-        //                     console.log(data, `${url}/api/v1/Customer/${seria.value}/${nomer.value}`)
-        //                     authUserAction({nomer, seria, ...data});
-        //                     await this._storeData('user', JSON.stringify(data));
-        //                     navigation.navigate('HOME');
-        //                     return data;
-        //                 })
-        //                 .catch(err => console.log(`${url}/api/v1/Customer/${seria.value}/${nomer.value}`, err));
-        //         } catch(err) {
-        //             console.log(err)
-        //         }
-        //     } else {
-        //         alert('нет подключения к интернету');
-        //     }
-        // });
-    }
-
 
     render() {
         const { navigation } = this.props;

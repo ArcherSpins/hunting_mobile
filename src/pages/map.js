@@ -56,14 +56,14 @@ class MapPage extends React.Component {
                                 this.setState({ error: true });
                                 
                                 Toast.show({
-                                    text: err,
+                                    text: String(err),
                                     type: 'danger'
                                 });
                             }
                         })
                         .catch(err => 
                             Toast.show({
-                                text: err,
+                                text: String(err),
                                 type: 'danger'
                             }));
                 } else {
@@ -82,7 +82,7 @@ class MapPage extends React.Component {
         try {
             await AsyncStorage.setItem(label, value);
         } catch (error) {
-            console.log(error);
+            return
         }
     }
 
@@ -93,7 +93,7 @@ class MapPage extends React.Component {
                 return value;
             }
         } catch (error) {
-            console.log(error);
+            return {}
         }
     }
 
@@ -114,6 +114,13 @@ class MapPage extends React.Component {
         marker.coordinate = e.nativeEvent.coordinate;
         this.setState({ 
             markers:  [...markers.slice(0, idx), marker, ...markers.slice(idx + 1)]
+        })
+    }
+
+    componentDidCatch() {
+        Toast.show({
+            text: 'Произошла неизвестная ошибка',
+            type: 'danger'
         })
     }
 

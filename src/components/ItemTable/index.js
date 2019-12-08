@@ -84,7 +84,7 @@ export const ItemTable = ({icon, iconXml, title, content, last, navigation, url}
 export const ItemDetailsForHungry = (props) => {
     const {item, navigation = {navigate: () => {}}, style, last, children, arrow, textStyle} = props;
     return (
-        <ListItem onPress={() => item.path ? navigation.navigate(item.path, ({...props})) : console.log('not path')} style={[{borderBottomWidth: item.last || last ? 0 : 1}, style]}>
+        <ListItem onPress={() => item.path ? navigation.navigate(item.path, ({...props})) : void 0} style={[{borderBottomWidth: item.last || last ? 0 : 1}, style]}>
             <Left style={{width: '85%', minWidth:'85%'}}>
                 <Div style={{paddingRight: 10}}>
                 {

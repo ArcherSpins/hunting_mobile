@@ -32,7 +32,10 @@ const ViolationDetailComponent = ({ navigation, connected }) => {
                     setViolation(data);
                     await _setAsyncData(`violation_data_${data.data_customer_violations_id}`, JSON.stringify(data));
                 })
-                .catch(err => console.log(err));
+                .catch(err => Toast.show({
+                    text: err,
+                    type: 'danger'
+                }));
         } else {
             const violation = await _getAsyncData(`violation_data_${data.data_customer_violations_id}`);
             violation ? setViolation(JSON.parse(violation)) : Toast.show({
@@ -46,7 +49,7 @@ const ViolationDetailComponent = ({ navigation, connected }) => {
         try {
             await AsyncStorage.setItem(label, value);
         } catch (error) {
-            console.log(error);
+            return
         }
     }
     
@@ -57,7 +60,7 @@ const ViolationDetailComponent = ({ navigation, connected }) => {
                 return value;
             }
         } catch (error) {
-            console.log(error);
+            return {}
         }
     }
 

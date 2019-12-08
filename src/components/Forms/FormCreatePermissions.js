@@ -1,7 +1,7 @@
 import React from 'react';
 import { Modal, Text, Picker, View } from 'react-native';
 import styled from 'styled-components';
-import { Form, Item, Input, Button } from 'native-base';
+import { Form, Item, Input, Button, Toast } from 'native-base';
 // import YandexPayment from 'react-native-yandex-payment';
 import WebView from '../Webview';
 import { url } from '../../url';
@@ -85,7 +85,6 @@ class CreatePermission extends React.Component {
     }
 
     onChange = (idx, selectedOption) => {
-        console.log(idx, selectedOption)
         switch(idx) {
             case 'hunting_grounds':
                 this._fetchHuntiongSeason(selectedOption);
@@ -130,7 +129,10 @@ class CreatePermission extends React.Component {
             })
         })
         .catch(error => {
-            console.log(JSON.stringify(error), error);
+            Toast.show({
+                text: error,
+                type: 'danger'
+            })
         })
     }
 
@@ -143,7 +145,6 @@ class CreatePermission extends React.Component {
         })
         .then(response => response.json())
         .then((data) => {
-            console.log(data)
             this.setState({
                 stamp_duty: {
                     data,
@@ -151,7 +152,10 @@ class CreatePermission extends React.Component {
             })
         })
         .catch(error => {
-            console.log(JSON.stringify(error), error);
+            Toast.show({
+                text: error,
+                type: 'danger'
+            })
         })
     }
 
@@ -166,7 +170,6 @@ class CreatePermission extends React.Component {
     getFormPay = async () => {
         const { user } = this.props;
         const { season } = this.state;
-        console.log(user, season)
         const response = await fetch(`${url}/api/v1/Payment/paymentPage?huntingFarmSeasonId=${season.value}&customerLicId=${user.data_customer_hunting_lic_id}`, {
             method: 'post'
         });
@@ -196,6 +199,11 @@ class CreatePermission extends React.Component {
         if (data) {
             this.setState({ isOpenWebview: true, FormUrl: data.FormUrl });
             onSubmit(data, null);
+        } else {
+            Toast.show({
+                text: 'На сервере ошибка',
+                type: 'danger'
+            })
         }
         
     }

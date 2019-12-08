@@ -26,7 +26,6 @@ class FsService {
   };
 
   writeJsonFile = async (filename, fileContent) => {
-      console.log(fileContent)
     const directoryInLibrary = this.prepareLibraryDirectoryPath();
     try {
       this.createDirectoryInLibrary(directoryInLibrary);

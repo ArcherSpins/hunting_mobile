@@ -29,7 +29,6 @@ class HuntingPage extends React.PureComponent {
         NetInfo.isConnected.fetch().then(async isConnected => {
             if (isConnected) {
                 await this.fetchHuntings();
-                console.log('fetch data');
                 return false;
             } else {
                 const huntings = await this._getAsyncData('huntings');
@@ -65,7 +64,7 @@ class HuntingPage extends React.PureComponent {
         try {
             await AsyncStorage.setItem(label, value);
         } catch (error) {
-            console.log(error);
+            return
         }
     }
     
@@ -76,7 +75,7 @@ class HuntingPage extends React.PureComponent {
                 return value;
             }
         } catch (error) {
-            console.log(error);
+            return {}
         }
     }
 

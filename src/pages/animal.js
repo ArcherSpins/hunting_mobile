@@ -54,7 +54,7 @@ class AnimalPage extends React.Component {
         try {
             await AsyncStorage.setItem(label, value);
         } catch (error) {
-            console.log(error);
+            return {}
         }
     }
 
@@ -65,7 +65,7 @@ class AnimalPage extends React.Component {
                 return value;
             }
         } catch (error) {
-            console.log(error);
+            return {}
         }
     }
 

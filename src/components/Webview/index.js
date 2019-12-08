@@ -14,7 +14,6 @@ const INJECTED_JAVASCRIPT = `(function() {
 const runFirst = `
     true;
 `;
-//.match(/\orderId=.+&/)[0].replace(/.+=/, '').replace('&', '')
 export default ({ goBack, title, url }) => (
     <Container>
         <HeaderDetails onGoBack={() => goBack()} title={title} />
@@ -24,14 +23,12 @@ export default ({ goBack, title, url }) => (
             injectJavaScript={INJECTED_JAVASCRIPT}
             renderLoading={() => <p style={{ flex: 1 }}>Loading..</p>}
             onShouldStartLoadWithRequest={request => {
-                console.log(request)
                 // if (request.url.match(/success=.+?&/)[0].replace('&', '').replace('success=', '') === 'false') {
                 //     goBack();
                 //     return false;
                 // }
 
                 // goBack(true);
-
                 return true;
             }}
             injectedJavaScript={runFirst}

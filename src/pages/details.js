@@ -1,6 +1,7 @@
 import React from 'react';
 import { ImageBackground, Dimensions, StatusBar, PermissionsAndroid, View, AsyncStorage, Text } from 'react-native';
 import NetInfo from '@react-native-community/netinfo';
+import { Toast } from 'native-base'
 import Geolocation from 'react-native-geolocation-service';
 import {
     HeaderDetails,
@@ -72,7 +73,10 @@ class DetailsPage extends React.Component {
                          }
 
                     } catch (err) {
-                        console.log(err)
+                        Toast.show({
+                            text: err,
+                            type: 'danger'
+                        })
                     }
                 } else {
                     const location_user =  await this._getAsyncData('location_user');
@@ -95,14 +99,12 @@ class DetailsPage extends React.Component {
                 })
                     .then(response => response.json())
                     .then(async (data) => {
-                        console.log(data);
                         this.setState({ dataPermissions: data });
                         getPermissionAction(data);
                         // FsService.writeJsonFile(`permissions.json`, data)
                         await this._setAsyncData('license_hunting', JSON.stringify(data));
                     })
                     .catch(error => {
-                        console.log(error);
                         getPermissionAction([]);
                     });
             } else {
@@ -111,7 +113,10 @@ class DetailsPage extends React.Component {
 
         } else {
             getPermissionAction([]);
-            alert('Нет подключения к интернету');
+            Toast.show({
+                text: 'Ошибка подключения',
+                type: 'danger'
+            })
         }
         this.setState({ loading: false, })
     }
@@ -136,7 +141,7 @@ class DetailsPage extends React.Component {
         try {
             await AsyncStorage.setItem(label, value);
         } catch (error) {
-            console.log(error);
+            return
         }
     }
 
@@ -147,7 +152,7 @@ class DetailsPage extends React.Component {
                 return value;
             }
         } catch (error) {
-            console.log(error);
+            return {}
         }
     }
 
@@ -164,7 +169,6 @@ class DetailsPage extends React.Component {
             error: err.message
         });
         setLocationUser(null);
-        console.log(err.message);
     }
 
     openCreateForm = () => {
@@ -179,7 +183,6 @@ class DetailsPage extends React.Component {
     render() {
         const { navigation, locationLoading, location, permissionLoading } = this.props;
         const { title, info, data, user, headerTitle, permissionPage } = navigation.state.params;
-        console.log(data)
         if (locationLoading || permissionLoading || this.state.loading)
             return <Loading />
 

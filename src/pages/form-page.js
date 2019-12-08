@@ -161,7 +161,6 @@ class FormPage extends PureComponent {
                                 }
                                 if (data.data_customer_id) {
                                     authUserAction({nomer, seria, ...data});
-                                    console.log(data, 'set local')
                                     await this._storeData('user', JSON.stringify(data));
                                     navigation.navigate('HOME');
                                     return data;

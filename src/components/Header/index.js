@@ -6,7 +6,6 @@ import { Container, Label, Icon, Logo, Text, Title } from './styled';
 export const Header = ({user, navigation = { navigate: () => {} }}) => {
     const filterStr =  user.customer_name ? user.customer_name.trim().split(' ').filter(a => a !== '') : [];
     const str = filterStr.length > 1 ? filterStr[1] : filterStr.length > 0 ? filterStr[0] : 'Нет имени';
-    console.log(navigation)
     return (
         <Container>
             <View style={{ flex: 1 }}>
